@@ -1,5 +1,4 @@
 import urllib.request
-import re
 from socket import timeout
 
 
@@ -20,9 +19,3 @@ def get_page(url):
     return text
 
 
-rex2 = r'<div class=\'tishi\'>(.*?)<\/div>'
-rex = r'dateArr = (.*?);'
-rex1 = r'\'(.*?)\''
-r = re.compile(rex)
-r1 = re.compile(rex1)
-r2 = re.compile(rex2)

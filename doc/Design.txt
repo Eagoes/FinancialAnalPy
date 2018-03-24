@@ -1,5 +1,6 @@
 class_BalanceSheet:
 	financial_year		#会计年度
+	monetary_funds	#货币资金
 	trading_financial_assets_	#交易性金融资产
 	bill_receivable 	#应收票据
 	accounts_receivable 	#应收账款
@@ -137,6 +138,33 @@ class CashFlowStatement:
 	net_inc_cash	#现金及现金等价物净增加额
 	initial_cash	#期初现金及现金等价物余额
 	final_cash	#期末现金及现金等价物余额
+	net_profit  #净利润
+	asset_impairment_loss  #资产减值准备
+	fixed_assets_depreciation  #固定资产折旧、油气资产消耗、生产性生物资产折旧
+	intangible_assets_amortize  #无形资产费用摊销
+	long-term_prepaid_expenses_amortization  #长期待摊费用摊销
+	the_disposal_of_fixed_assets  #处置固定资产、无形资产、和其他长期资产收回的损失
+	fixed_assets_scrap_loss  固定资产报废损失
+	losses_on_the_changes_in_the_fair_value  #公允价值变动损失
+	finance_charges  #财务费用
+	investment_losses  #投资损失
+	deferred_tax_assets  #递延所得税资产减少
+	deferred_income_tax_liabilities  #递延所得税负债增加
+	the_decrease_of_inventory  #存货的减少
+	a_drop_in_business_receivables  #经营性应收项目的减少
+	business_to_cope_with_the_increase_of_the_project  #经营性应付项目的增加
+	other  #其他
+	business_activities_generated_cash_flow_net_2  #经营活动产生的现金流量净额
+	a_debt_into_capital  #负债转为资本
+	convertible_bonds_matured_within_a_year  #一年内到期的可转换公司债券
+	for_fixed_assets  #融资租入固定资产
+	the_ending_balance_of_cash  #现金的期末余额
+	reduction:_the_beginning_balance_of_cash  #现金的期初余额
+	cash_equivalents_of_the_final_balance  #现金等价物的期末余额
+	the_beginning_balance_of_minus:_cash_equivalents  #现金等价物的期初余额
+	other_reasons_the_impact_on_the_cash_2  #其他原因对现金的影响
+	net_increase_in_cash_and_cash_equivalents  #现金及现金等价物净增加额
+
 	get_list()
 
 
