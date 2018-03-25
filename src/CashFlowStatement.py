@@ -32,6 +32,13 @@ class CashFlowStatement:
     def get_data(self):
         return self.data
 
+    def data_add(self, other):
+        for i in len(self.data_list):
+            self.data_list[i] += other.data_list[i]
+        for key in cash_sheet_content:
+            self.data[key] += other.data[key]
+
+
 class CashData:
     def __init__(self, stockid, startyear, finalyear, date):
         """

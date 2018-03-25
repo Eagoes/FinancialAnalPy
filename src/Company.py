@@ -8,6 +8,7 @@ from OperAbility import OperData
 from Solvency import SolvData
 from globalVar import id2name_dict, season2date
 
+
 class Company:
     def __init__(self, stockid, startyear, finalyear, season):
         self.stockid = stockid
@@ -32,8 +33,6 @@ class Company:
         self.cre_data = None  # 创现能力
         self.solv_data = None  # 偿债能力
 
-
-
     def trim_year_set(self, master_set):
         """
         :param master_set: a year set that three data set must be trimmed to be similar to it
@@ -55,9 +54,8 @@ class Company:
             should also be trimmed.
             '''
             for key, value in self.annual_data:
-               if key not in master_set:
-                   self.annual_data.pop(key)
-
+                if key not in master_set:
+                    self.annual_data.pop(key)
 
     def calculate(self):
         """
