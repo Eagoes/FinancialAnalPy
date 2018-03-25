@@ -53,7 +53,7 @@ class Company:
             run. if the method is called later when all the companies unify their year set, their annual data dictionary
             should also be trimmed.
             '''
-            for key, value in self.annual_data:
+            for key, value in self.annual_data.items():
                 if key not in master_set:
                     self.annual_data.pop(key)
 

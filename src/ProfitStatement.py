@@ -19,7 +19,10 @@ class ProfitStatement:
                     continue
                 else:
                     s = htmlslice.replace(",", "")
-                    self.data_list.append(float(s))
+                    try:
+                        self.data_list.append(float(s))
+                    except ValueError:
+                        pass
         for i in range(len(profit_sheet_content)):
             self.data[profit_sheet_content[i]] = self.data_list[i]
 
@@ -33,7 +36,7 @@ class ProfitStatement:
         return self.data
 
     def data_add(self, other):
-        for i in len(self.data_list):
+        for i in range(len(self.data_list)):
             self.data_list[i] += other.data_list[i]
         for key in profit_sheet_content:
             self.data[key] += other.data[key]
