@@ -82,7 +82,14 @@ class Company:
         # add profit statement output here
         cash_sheet = workbook.add_worksheet('现金流量表')
         # add cash flow statement output here
+        # write the head of the sheet
         indicator_sheet = workbook.add_worksheet('指标')
+        year_list = list(self.year_set)
+        year_list.sort()
+        col = 1
+        for year in year_list:
+            indicator_sheet.write(0, col, year)
+            col += 1
         # add indicator data output here
         dev_chart_sheet = workbook.add_worksheet('发展能力图表')
         # add devlop ability chart output here

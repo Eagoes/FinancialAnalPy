@@ -20,7 +20,6 @@ class ProfitAbility:
         curr_bsheet = curr_year_list[0].get_data()
         curr_psheet = curr_year_list[1].get_data()
         self.year = year
-        self.weight = [10, 10, 20, 20, 15, 10, 15]
         self.data = {}
         # 销售毛利率
         self.data["sales_gross_margin"] = safe_div(
@@ -72,9 +71,6 @@ class ProfitAbility:
             self.data["earnings_per_share"],
             self.data["capital_operating_rate_of_return"]
         ]
-        self.score = 0
-        for i in range(len(self.data_list)):
-            self.score += self.data_list[i] * self.weight[i]
 
 
     def get_data(self):
@@ -91,6 +87,7 @@ class ProData:
         :param year_set: catch the year set from Company instance and calculate the profit ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
+        self.weight = [10, 10, 20, 20, 15, 10, 15]
         year_list = list(year_set)
         year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is ProfitAbility
@@ -103,6 +100,9 @@ class ProData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of ProfitAbility
             self.year2data[curr_year] = new_data
+        self.avg_data = None  # the average data of the industry
+        self.ratio = None  # the limited ratio between the company data and the average data
+        self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
         """

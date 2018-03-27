@@ -1,4 +1,5 @@
 from globalVar import safe_growth_rate, safe_div
+from xlsxwriter.worksheet import Worksheet
 
 class CreateAbility:
     data_name_list = [
@@ -19,7 +20,6 @@ class CreateAbility:
         curr_psheet = curr_year_list[1].get_data()
         curr_fsheet = curr_year_list[2].get_data()
         self.year = year
-        self.weight = [25, 15, 20, 15, 10, 15]
         self.data = {}
         # 经营现金增长率
         self.data["operating_cash_growth_rate"] = safe_growth_rate(
@@ -56,9 +56,6 @@ class CreateAbility:
             self.data["sales_cash_ratio"],
             self.data["sales_free_cash_ratio"]
         ]
-        self.score = 0
-        for i in range(len(self.data_list)):
-            self.score += self.data_list[i] * self.weight[i]
 
 
     def get_data(self):
@@ -75,6 +72,7 @@ class CreData:
         :param year_set: catch the year set from Company instance and calculate the create ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
+        self.weight = [25, 15, 20, 15, 10, 15]
         year_list = list(year_set)
         year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is CreateAbility
@@ -87,6 +85,9 @@ class CreData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of CreateAbility
             self.year2data[curr_year] = new_data
+        self.avg_data = None  # the average data of the industry
+        self.ratio = None  # the limited ratio between the company data and the average data
+        self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
         """
@@ -95,3 +96,15 @@ class CreData:
         :return: the certain DevAbility instance
         """
         return self.year2data[year]
+
+    def write_data(self, sheet: Worksheet, year_list):
+        """
+        write the indicator data to the indicator sheet
+        :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
+        :param year_list: the year list of the company's year set
+        """
+        col = 7
+        for year in year_list:
+            year_data = self.year2data[year]
+            sheet.write_column(1, col, year_data.data_list)
+            col += 1

@@ -1,6 +1,7 @@
 from NoResponseError import NoResponseError
 from Crawler import *
 from globalVar import *
+from xlsxwriter.worksheet import Worksheet
 
 
 class BalanceSheet:
@@ -94,3 +95,4 @@ class BalanceData:
         if year in self.year_set:
             self.year_set.remove(year)
             self.year2sheet.pop(k=year, default=None)
+

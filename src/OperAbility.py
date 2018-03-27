@@ -21,7 +21,6 @@ class OperAbility:
         curr_bsheet = curr_year_list[0].get_data()
         curr_psheet = curr_year_list[1].get_data()
         self.year = year
-        self.weight = [0, 0, 10, 20, 30, 20, 20, 0]
         self.data = {}
         # 销售费用率
         self.data["sales_expense_rate"] = safe_div(
@@ -77,9 +76,6 @@ class OperAbility:
             self.data["inventory_turnover_days"],
             self.data["business_cycle"]
         ]
-        self.score = 0
-        for i in range(len(self.data_list)):
-            self.score += self.data_list[i] * self.weight[i]
 
 
     def get_data(self):
@@ -96,6 +92,7 @@ class OperData:
         :param year_set: catch the year set from Company instance and calculate the operation ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
+        self.weight = [0, 0, 10, 20, 30, 20, 20, 0]
         year_list = list(year_set)
         year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is OperAbility
@@ -108,6 +105,9 @@ class OperData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of OperAbility
             self.year2data[curr_year] = new_data
+        self.avg_data = None  # the average data of the industry
+        self.ratio = None  # the limited ratio between the company data and the average data
+        self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
         """

@@ -73,3 +73,17 @@ class Industry(Company):
             self.__add_balance(company=company)
             self.__add_profit(company=company)
             self.__add_cash(company=company)
+
+    def alloc_data_for_company(self, company_list):
+        """
+        send the last year industry indicator data to every company as the average data of the industry
+        :param company_list: the list of companies
+        """
+        year_list = list(self.year_set)
+        lastyear = year_list[len(year_list) - 1]  # get the last year
+        avg_dev_data = self.dev_data.get_indicator(year=lastyear).data_list
+        avg_cre_data = self.cre_data.get_indicator(year=lastyear).data_list
+        avg_pro_data = self.pro_data.get_indicator(year=lastyear).data_list
+        avg_oper_data = self.oper_data.get_indicator(year=lastyear).data_list
+        avg_solv_data = self.solv_data.get_indicator(year=lastyear).data_list
+        for company in company_list:
