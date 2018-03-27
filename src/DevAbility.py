@@ -113,4 +113,3 @@ class DevData:
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
         last_year_data = self.year2data[max(self.year_list)].data_list
-        
