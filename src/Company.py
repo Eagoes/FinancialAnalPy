@@ -7,6 +7,7 @@ from ProfitAbility import ProData
 from OperAbility import OperData
 from Solvency import SolvData
 from globalVar import id2name_dict, season2date
+import xlsxwriter as xlw
 
 
 class Company:
@@ -68,3 +69,28 @@ class Company:
         self.pro_data = ProData(year_set=self.year_set, annual_data=self.annual_data)
         self.oper_data = OperData(year_set=self.year_set, annual_data=self.annual_data)
         self.solv_data = SolvData(year_set=self.year_set, annual_data=self.annual_data)
+
+    def write_xlsx(self, filepath='../result/'):
+        """
+        output the company information and data to the excel 2007+ (.xlsx) file
+        :param filepath: the dir of the excel file you want to create
+        """
+        workbook = xlw.Workbook(filepath + self.stockid)
+        balance_sheet = workbook.add_worksheet('资产负债表')
+        # add balance sheet output here
+        profit_sheet = workbook.add_worksheet('利润表')
+        # add profit statement output here
+        cash_sheet = workbook.add_worksheet('现金流量表')
+        # add cash flow statement output here
+        indicator_sheet = workbook.add_worksheet('指标')
+        # add indicator data output here
+        dev_chart_sheet = workbook.add_worksheet('发展能力图表')
+        # add devlop ability chart output here
+        cre_chart_sheet = workbook.add_worksheet('创现能力图表')
+        # add create ability chart output here
+        pro_chart_sheet = workbook.add_worksheet('盈利能力图表')
+        # add profit ability chart output here
+        oper_chart_sheet = workbook.add_worksheet('运营能力图表')
+        # add operate ability chart output here
+        solv_chart_sheet = workbook.add_worksheet('偿债能力图表')
+        # add solvency chart output here
