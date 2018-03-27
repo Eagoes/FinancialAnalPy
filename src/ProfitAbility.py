@@ -1,4 +1,7 @@
-from globalVar import safe_div
+from globalVar import safe_div, get_ratio
+from xlsxwriter.worksheet import Worksheet
+from copy import copy
+
 
 class ProfitAbility:
     data_name_list = [
@@ -10,6 +13,7 @@ class ProfitAbility:
         "每股收益",
         "资本运营收益率"
     ]
+
     def __init__(self, year, prev_year_list, curr_year_list):
         """
         :param year: [year]'s indicators
@@ -101,7 +105,7 @@ class ProData:
             )  # make a new instance of ProfitAbility
             self.year2data[curr_year] = new_data
         self.avg_data = None  # the average data of the industry
-        self.ratio = None  # the limited ratio between the company data and the average data
+        self.ratio = [0] * 7  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
@@ -111,3 +115,22 @@ class ProData:
         :return: the certain DevAbility instance
         """
         return self.year2data[year]
+
+    def get_avg_data(self, avg_data):
+        self.avg_data = copy(avg_data)
+        last_year_data = self.year2data[max(self.year_list)].data_list
+        for i in range(len(last_year_data)):
+            self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
+            self.score += self.score[i]
+
+    def write_data(self, sheet: Worksheet, year_list):
+        """
+        write the indicator data to the indicator sheet
+        :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
+        :param year_list: the year list of the company's year set
+        """
+        col = 1
+        for year in year_list:
+            year_data = self.year2data[year]
+            sheet.write_column(1, col, year_data.data_list)
+            col += 1

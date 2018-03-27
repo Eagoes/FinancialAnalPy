@@ -87,3 +87,9 @@ class Industry(Company):
         avg_oper_data = self.oper_data.get_indicator(year=lastyear).data_list
         avg_solv_data = self.solv_data.get_indicator(year=lastyear).data_list
         for company in company_list:
+            company.dev_data.get_avg_data(avg_data=avg_dev_data)
+            company.cre_data.get_avg_data(avg_data=avg_cre_data)
+            company.pro_data.get_avg_data(avg_data=avg_pro_data)
+            company.oper_data.get_avg_data(avg_data=avg_oper_data)
+            company.solv_data.get_avg_data(avg_data=avg_solv_data)
+            company.get_score()

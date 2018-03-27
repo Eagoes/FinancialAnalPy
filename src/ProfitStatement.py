@@ -1,6 +1,7 @@
 from NoResponseError import NoResponseError
 from Crawler import *
 from globalVar import *
+from xlsxwriter.worksheet import Worksheet
 
 
 class ProfitStatement:
@@ -95,3 +96,9 @@ class ProfitData:
         if year in self.year_set:
             self.year_set.remove(year)
             self.year2sheet.pop(k=year, default=None)
+
+    def write_data(self, sheet: Worksheet, year_list):
+        row = 0
+        for year in year_list:
+            sheet.write(row, 0, year)
+            sheet.write_row(row, 1, self.get_sheet(year).data_list)

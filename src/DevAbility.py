@@ -1,6 +1,7 @@
-from globalVar import safe_growth_rate
+from globalVar import safe_growth_rate, get_ratio
 from xlsxwriter.worksheet import Worksheet
 from copy import copy
+
 
 class DevAbility:
     data_name_list = [
@@ -10,6 +11,7 @@ class DevAbility:
         "净资产增长率",
         "固定资产增长率"
     ]
+
     def __init__(self, year, prev_year_list, curr_year_list):
         """
         :param year: [year]'s indicators
@@ -55,7 +57,6 @@ class DevAbility:
             self.data["fixed_asset_growth_rate"]
         ]
 
-
     def get_data(self):
         return self.data
 
@@ -87,7 +88,7 @@ class DevData:
             )  # make a new instance of DevAbility
             self.year2data[curr_year] = new_data
         self.avg_data = None  # the average data of the industry
-        self.ratio = None  # the limited ratio between the company data and the average data
+        self.ratio = [0] * 5  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
@@ -113,3 +114,6 @@ class DevData:
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
         last_year_data = self.year2data[max(self.year_list)].data_list
+        for i in range(len(last_year_data)):
+            self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
+            self.score += self.score[i]

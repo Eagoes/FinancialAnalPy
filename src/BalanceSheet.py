@@ -43,14 +43,14 @@ class BalanceSheet:
             self.data[key] += other.data[key]
 
 
-
 class BalanceData:
     def __init__(self, stockid, startyear, finalyear, date):
         """
         :param stockid: string, the stock code of the company
         :param startyear: int, the first year the program want to fetch
         :param finalyear: itn, the last year the program want to fetch
-        :param date: string, the date related to the season, the first season is 03.15, the second season is 06.30, the third season is 09.30, the annual season is 12.31
+        :param date: string, the date related to the season, the first season is 03.15, the second season is 06.30,
+        the third season is 09.30, the annual season is 12.31
         """
         self.year_set = set()
         self.year2sheet = {}
@@ -96,3 +96,8 @@ class BalanceData:
             self.year_set.remove(year)
             self.year2sheet.pop(k=year, default=None)
 
+    def write_data(self, sheet: Worksheet, year_list):
+        row = 0
+        for year in year_list:
+            sheet.write(row, 0, year)
+            sheet.write_row(row, 1, self.get_sheet(year).data_list)

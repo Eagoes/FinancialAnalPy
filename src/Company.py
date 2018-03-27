@@ -1,11 +1,11 @@
 from BalanceSheet import BalanceData
 from ProfitStatement import ProfitData
 from CashFlowStatement import CashData
-from DevAbility import DevData
-from CreateAbility import CreData
-from ProfitAbility import ProData
-from OperAbility import OperData
-from Solvency import SolvData
+from DevAbility import *
+from CreateAbility import *
+from ProfitAbility import *
+from OperAbility import *
+from Solvency import *
 from globalVar import id2name_dict, season2date
 import xlsxwriter as xlw
 
@@ -33,6 +33,7 @@ class Company:
         self.pro_data = None  # 盈利能力数据
         self.cre_data = None  # 创现能力
         self.solv_data = None  # 偿债能力
+        self.score = 0
 
     def trim_year_set(self, master_set):
         """
@@ -41,7 +42,7 @@ class Company:
         """
         sub_set = self.balance_data.year_set - master_set
         for year in sub_set:
-            self.balance_data.del_sheet(year=year)  #remove the sheet whose year is not in the master set
+            self.balance_data.del_sheet(year=year)  # remove the sheet whose year is not in the master set
         sub_set = self.profit_data.year_set - master_set
         for year in sub_set:
             self.profit_data.del_sheet(year=year)
@@ -70,34 +71,71 @@ class Company:
         self.oper_data = OperData(year_set=self.year_set, annual_data=self.annual_data)
         self.solv_data = SolvData(year_set=self.year_set, annual_data=self.annual_data)
 
+    def get_score(self):
+        self.score = (
+            0.3 * self.dev_data.score
+            + 0.25 * self.cre_data.score
+            + 0.2 * self.pro_data.score
+            + 0.15 * self.oper_data.score
+            + 0.1 * self.solv_data.score
+        )
+
     def write_xlsx(self, filepath='../result/'):
         """
         output the company information and data to the excel 2007+ (.xlsx) file
         :param filepath: the dir of the excel file you want to create
         """
         workbook = xlw.Workbook(filepath + self.stockid)
-        balance_sheet = workbook.add_worksheet('资产负债表')
-        # add balance sheet output here
-        profit_sheet = workbook.add_worksheet('利润表')
-        # add profit statement output here
-        cash_sheet = workbook.add_worksheet('现金流量表')
-        # add cash flow statement output here
-        # write the head of the sheet
-        indicator_sheet = workbook.add_worksheet('指标')
         year_list = list(self.year_set)
         year_list.sort()
+
+        balance_sheet = workbook.add_worksheet('资产负债表')
+        self.balance_data.write_data(sheet=balance_sheet, year_list=year_list)
+
+        profit_sheet = workbook.add_worksheet('利润表')
+        self.profit_data.write_data(sheet=profit_sheet, year_list=year_list)
+
+        cash_sheet = workbook.add_worksheet('现金流量表')
+        self.cash_data.write_data(sheet=cash_sheet, year_list=year_list)
+
+        indicator_sheet = workbook.add_worksheet('指标')
+        # write the year of the indicator sheet
         col = 1
+        avg_col = 1 + len(year_list)  # “行业平均”数据所在列
+        ratio_col = 1 + avg_col  # “比率”数据所在列
+        sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
+        score_col = 1 + sub_score_col  # 公司得分所在列
         for year in year_list:
             indicator_sheet.write(0, col, year)
             col += 1
-        # add indicator data output here
+        indicator_sheet.write(0, avg_col, "行业平均数据")
+        indicator_sheet.write(0, ratio_col, "比率")
+        indicator_sheet.write(0, sub_score_col, "分项能力得分")
+        indicator_sheet.write(0, score_col, "公司得分")
+        # write the indicator name which is on the left bar to the indicator sheet
+        indicator_sheet.write_column(1, 0, DevAbility.data_name_list)
+        indicator_sheet.write_column(6, 0, CreateAbility.data_name_list)
+        indicator_sheet.write_column(12, 0, ProfitAbility.data_name_list)
+        indicator_sheet.write_column(19, 0, OperAbility.data_name_list)
+        indicator_sheet.write_column(27, 0, Solvency.data_name_list)
+        # write the indicator data
+        self.dev_data.write_data(sheet=indicator_sheet, year_list=year_list)
+        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
+        self.pro_data.write_data(sheet=indicator_sheet, year_list=year_list)
+        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
+        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
+
         dev_chart_sheet = workbook.add_worksheet('发展能力图表')
         # add devlop ability chart output here
+
         cre_chart_sheet = workbook.add_worksheet('创现能力图表')
         # add create ability chart output here
+
         pro_chart_sheet = workbook.add_worksheet('盈利能力图表')
         # add profit ability chart output here
+
         oper_chart_sheet = workbook.add_worksheet('运营能力图表')
         # add operate ability chart output here
+
         solv_chart_sheet = workbook.add_worksheet('偿债能力图表')
         # add solvency chart output here

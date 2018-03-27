@@ -187,9 +187,28 @@ def safe_div(dividend, divisor):
         val = 0
     return val
 
+
 def safe_growth_rate(dividend: float, divisor: float) -> float:
     try:
         val = float(dividend) / divisor - 1
     except ZeroDivisionError:
         val = 0
     return val
+
+
+def get_ratio(last_data: float, avg_data: float):
+    """
+    get the ratio between final year indicator and the average data
+    :param last_data: one of the company's last year's indicator
+    :param avg_data: the industry average data
+    :return: the ratio which is safe
+    """
+    try:
+        ratio = last_data / avg_data
+    except ZeroDivisionError:
+        ratio = 0
+    if ratio > 2:
+        ratio = 2
+    if ratio < 0:
+        ratio = 0
+    return ratio

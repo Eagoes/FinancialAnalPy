@@ -1,5 +1,6 @@
-from globalVar import safe_growth_rate, safe_div
+from globalVar import safe_growth_rate, safe_div, get_ratio
 from xlsxwriter.worksheet import Worksheet
+
 
 class CreateAbility:
     data_name_list = [
@@ -10,6 +11,7 @@ class CreateAbility:
         "销售现金比",
         "销售自由现金比"
     ]
+
     def __init__(self, year, prev_year_list, curr_year_list):
         """
         :param year: [year]'s indicators
@@ -86,7 +88,7 @@ class CreData:
             )  # make a new instance of CreateAbility
             self.year2data[curr_year] = new_data
         self.avg_data = None  # the average data of the industry
-        self.ratio = None  # the limited ratio between the company data and the average data
+        self.ratio = [0] * 6  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
@@ -108,3 +110,10 @@ class CreData:
             year_data = self.year2data[year]
             sheet.write_column(1, col, year_data.data_list)
             col += 1
+
+    def get_avg_data(self, avg_data):
+        self.avg_data = copy(avg_data)
+        last_year_data = self.year2data[max(self.year_list)].data_list
+        for i in range(len(last_year_data)):
+            self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
+            self.score += self.score[i]
