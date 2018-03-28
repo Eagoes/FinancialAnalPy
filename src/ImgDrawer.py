@@ -29,10 +29,11 @@ def img_draw(title: str, category: list,  plot_params: list):
     imgdata.seek(0)
     return imgdata
 
-def bar_and_plot(categoty: list, bar_param: list, plot_param:list):
+
+def bar_and_plot(category: list, bar_param: list, plot_param:list):
     """
     the function that draws an image contains a bar axis and a plot axis
-    :param categoty: data of the x axis
+    :param category: data of the x axis
     :param bar_param: data of the bar axis, bar title
     :param plot_param: data of the plot axis, plot title
     :return: the byte stream of the image
@@ -40,8 +41,8 @@ def bar_and_plot(categoty: list, bar_param: list, plot_param:list):
     imgdata = BytesIO()
     fig, left_axe = plt.subplots()
     right_axe = left_axe.twinx()
-    left_axe.bar(categoty, bar_param[0], label=bar_param[1])
-    right_axe.plot(categoty, plot_param[0], label=plot_param[1])
+    left_axe.bar(category, bar_param[0], label=bar_param[1])
+    right_axe.plot(category, plot_param[0], label=plot_param[1])
 
     box = left_axe.get_position()
     left_axe.set_position([box.x0, box.y0 + box.height * 0.1,
@@ -49,3 +50,6 @@ def bar_and_plot(categoty: list, bar_param: list, plot_param:list):
     left_axe.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=9, frameon=False)
     left_axe.ylabel(bar_param[1])
     right_axe.ylabel(plot_param[1])
+
+    return imgdata
+

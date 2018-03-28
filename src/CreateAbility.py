@@ -1,5 +1,10 @@
 from globalVar import safe_growth_rate, safe_div, get_ratio
+from BalanceSheet import *
+from CashFlowStatement import *
+from ProfitStatement import *
 from xlsxwriter.worksheet import Worksheet
+from copy import copy
+from ImgDrawer import *
 
 
 class CreateAbility:
@@ -75,12 +80,12 @@ class CreData:
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
         self.weight = [25, 15, 20, 15, 10, 15]
-        year_list = list(year_set)
-        year_list.sort()
+        self.year_list = list(year_set)
+        self.year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is CreateAbility
-        for idx in range(1, len(year_list)):
-            curr_year = year_list[idx]
-            prev_year = year_list[idx - 1]
+        for idx in range(1, len(self.year_list)):
+            curr_year = self.year_list[idx]
+            prev_year = self.year_list[idx - 1]
             new_data = CreateAbility(
                 year=curr_year,
                 curr_year_list=annual_data[curr_year],
@@ -99,14 +104,13 @@ class CreData:
         """
         return self.year2data[year]
 
-    def write_data(self, sheet: Worksheet, year_list):
+    def write_data(self, sheet: Worksheet):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
-        :param year_list: the year list of the company's year set
         """
         col = 7
-        for year in year_list:
+        for year in self.year_list:
             year_data = self.year2data[year]
             sheet.write_column(1, col, year_data.data_list)
             col += 1
@@ -117,3 +121,4 @@ class CreData:
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
             self.score += self.score[i]
+

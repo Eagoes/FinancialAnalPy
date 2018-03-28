@@ -119,11 +119,11 @@ class Company:
         indicator_sheet.write_column(19, 0, OperAbility.data_name_list)
         indicator_sheet.write_column(27, 0, Solvency.data_name_list)
         # write the indicator data
-        self.dev_data.write_data(sheet=indicator_sheet, year_list=year_list)
-        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
-        self.pro_data.write_data(sheet=indicator_sheet, year_list=year_list)
-        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
-        self.cre_data.write_data(sheet=indicator_sheet, year_list=year_list)
+        self.dev_data.write_data(indicator_sheet)
+        self.cre_data.write_data(indicator_sheet)
+        self.pro_data.write_data(indicator_sheet)
+        self.cre_data.write_data(indicator_sheet)
+        self.cre_data.write_data(indicator_sheet)
 
         dev_chart_sheet = workbook.add_worksheet('发展能力图表')
         # add devlop ability chart output here

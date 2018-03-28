@@ -1,6 +1,10 @@
-from globalVar import safe_growth_rate, get_ratio
+from globalVar import safe_growth_rate, safe_div, get_ratio
+from BalanceSheet import *
+from CashFlowStatement import *
+from ProfitStatement import *
 from xlsxwriter.worksheet import Worksheet
 from copy import copy
+from ImgDrawer import *
 
 
 class DevAbility:
@@ -99,14 +103,13 @@ class DevData:
         """
         return self.year2data[year]
 
-    def write_data(self, sheet: Worksheet, year_list):
+    def write_data(self, sheet: Worksheet):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
-        :param year_list: the year list of the company's year set
         """
         col = 1
-        for year in year_list:
+        for year in self.year_list:
             year_data = self.year2data[year]
             sheet.write_column(1, col, year_data.data_list)
             col += 1
@@ -117,3 +120,17 @@ class DevData:
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
             self.score += self.score[i]
+
+    def write_xlsx(self, sheet: Worksheet, balance_data: BalanceData, profit_data:ProfitData, cash_data:CashData):
+        graph = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [profit_data.get_sheet(year).data["operating_income"] for year in self.year_list],
+                "营业收入"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["sales_growth_rate"] for year in self.year_list],
+                "销售增长率"
+            ]
+        )
+        sheet.insert_image(0, 0, "", {"image_data": graph})
