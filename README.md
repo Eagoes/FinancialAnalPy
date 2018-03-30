@@ -1,6 +1,6 @@
 # FinancialAnalPy
 
-####基本介绍
+##基本介绍
 程序主要目的是进行财务数据管理与分析，从和讯网爬取数据，计算财务指标并在excel 2007+版本（.xlsx)上进行绘图
 程序使用python3作为平台，需要的软件包为xlsxwriter和matplotlib
 程序通过settings.json文件进行参数设定：
