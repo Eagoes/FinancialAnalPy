@@ -1,5 +1,5 @@
-from Company import Company
-from copy import deepcopy
+from .Company import Company
+from copy import deepcopy, copy
 
 
 class Industry(Company):
@@ -14,6 +14,7 @@ class Industry(Company):
         :param curr_year: using for updating the final year
         """
         self.year_set = set()
+        self.stockid = "total"
         self.balance_data = None  # 资产负债表
         self.profit_data = None  # 利润表
         self.cash_data = None  # 现金流量表
@@ -79,14 +80,17 @@ class Industry(Company):
         send the last year industry indicator data to every company as the average data of the industry
         :param company_list: the list of companies
         """
+        cl = copy(company_list)
+        cl.append(self)
         year_list = list(self.year_set)
+        year_list.sort()
         lastyear = year_list[len(year_list) - 1]  # get the last year
         avg_dev_data = self.dev_data.get_indicator(year=lastyear).data_list
         avg_cre_data = self.cre_data.get_indicator(year=lastyear).data_list
         avg_pro_data = self.pro_data.get_indicator(year=lastyear).data_list
         avg_oper_data = self.oper_data.get_indicator(year=lastyear).data_list
         avg_solv_data = self.solv_data.get_indicator(year=lastyear).data_list
-        for company in company_list:
+        for company in cl:
             company.dev_data.get_avg_data(avg_data=avg_dev_data)
             company.cre_data.get_avg_data(avg_data=avg_cre_data)
             company.pro_data.get_avg_data(avg_data=avg_pro_data)

@@ -1,10 +1,8 @@
-from globalVar import safe_growth_rate, safe_div, get_ratio
-from BalanceSheet import *
-from CashFlowStatement import *
-from ProfitStatement import *
+from .globalVar import safe_growth_rate, safe_div, get_ratio
 from xlsxwriter.worksheet import Worksheet
+from xlsxwriter.utility import xl_rowcol_to_cell
 from copy import copy
-from ImgDrawer import *
+from .ImgDrawer import *
 
 
 class ProfitAbility:
@@ -108,6 +106,7 @@ class ProData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of ProfitAbility
             self.year2data[curr_year] = new_data
+        self.year_list.remove(self.year_list[0])
         self.avg_data = None  # the average data of the industry
         self.ratio = [0] * 7  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
@@ -125,9 +124,9 @@ class ProData:
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
-            self.score += self.score[i]
+            self.score += self.ratio[i] * self.weight[i]
 
-    def write_data(self, sheet: Worksheet):
+    def write_data(self, sheet: Worksheet, merge_format):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
@@ -136,5 +135,145 @@ class ProData:
         col = 1
         for year in self.year_list:
             year_data = self.year2data[year]
-            sheet.write_column(1, col, year_data.data_list)
+            sheet.write_column(12, col, year_data.data_list)
             col += 1
+        avg_col = 1 + len(self.year_list)  # “行业平均”数据所在列
+        ratio_col = 1 + avg_col  # “比率”数据所在列
+        sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
+        sheet.write_column(12, avg_col, self.avg_data)
+        sheet.write_column(12, ratio_col, self.ratio)
+        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(12, sub_score_col), xl_rowcol_to_cell(18, sub_score_col)),
+                          self.score, merge_format)
+
+    def write_xlsx(self, sheet: Worksheet, father):
+        graph1 = img_draw(
+            title="销售毛利率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_gross_margin"] for year in self.year_list],
+                    "销售毛利率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(0, 0, "", {"image_data": graph1})
+
+        graph2 = img_draw(
+            title="销售营业利润率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_operating_profit_margin"] for year in self.year_list],
+                    "销售营业利润率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(20, 0, "", {"image_data": graph2})
+
+        graph3 = img_draw(
+            title="销售净利率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_margin"] for year in self.year_list],
+                    "销售净利率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(40, 0, "", {"image_data": graph3})
+
+        graph4 = img_draw(
+            title="",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_operating_profit_margin"] for year in self.year_list],
+                    "销售营业利润率",
+                    1
+                ],
+                [
+                    [self.get_indicator(year).data["sales_operating_profit_margin"] for year in self.year_list],
+                    "销售营业利润率",
+                    1
+                ],
+                [
+                    [self.get_indicator(year).data["sales_margin"] for year in self.year_list],
+                    "销售净利率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(60, 0, "", {"image_data": graph4})
+
+        graph5 = img_draw(
+            title="净资产收益率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["roe"] for year in self.year_list],
+                    "净资产收益率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(80, 0, "", {"image_data": graph5})
+
+        graph6 = img_draw(
+            title="资产报酬率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["return_on_assets"] for year in self.year_list],
+                    "资产报酬率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(100, 0, "", {"image_data": graph6})
+
+        graph7 = img_draw(
+            title="",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["roe"] for year in self.year_list],
+                    "净资产收益率",
+                    1
+                ],
+                [
+                    [self.get_indicator(year).data["return_on_assets"] for year in self.year_list],
+                    "资产报酬率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(120, 0, "", {"image_data": graph7})
+
+        graph8 = img_draw(
+            title="每股收益",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["earnings_per_share"] for year in self.year_list],
+                    "每股收益",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(140, 0, "", {"image_data": graph8})
+
+        graph9 = img_draw(
+            title="资本运营收益率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["capital_operating_rate_of_return"] for year in self.year_list],
+                    "资本运营收益率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(160, 0, "", {"image_data": graph9})

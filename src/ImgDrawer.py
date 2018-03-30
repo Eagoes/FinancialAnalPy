@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 from io import BytesIO
 
 
@@ -12,21 +13,27 @@ def img_draw(title: str, category: list,  plot_params: list):
     :return: the byte stream of the image
     """
     imgdata = BytesIO()
-    fig, axe = plt.subplots()
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    xLocator = MultipleLocator(1)
+    fig, axe = plt.subplots(figsize=(5, 3))
     for info in plot_params:
         if info[2] == 1:  # use the plot method
             axe.plot(category, info[0], label=info[1])
         elif info[2] == 2:  # use the bar method
             axe.bar(category, info[0], label=info[1])
+    axe.xaxis.set_major_locator(xLocator)
 
     box = axe.get_position()
-    axe.set_position([box.x0, box.y0 + box.height * 0.1,
-                      box.width, box.height * 0.9])
+    axe.set_position([box.x0 - box.width * 0.03, box.y0 + box.height * 0.1,
+                           box.width, box.height * 0.9])
     axe.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=9, frameon=False)
     axe.set_title(title, fontsize=11)
 
     fig.savefig(imgdata, format='png')
     imgdata.seek(0)
+    plt.clf()
+    plt.cla()
+    plt.close()
     return imgdata
 
 
@@ -39,17 +46,26 @@ def bar_and_plot(category: list, bar_param: list, plot_param:list):
     :return: the byte stream of the image
     """
     imgdata = BytesIO()
-    fig, left_axe = plt.subplots()
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    xLocator = MultipleLocator(1)
+    fig, left_axe = plt.subplots(figsize=(5, 3))
     right_axe = left_axe.twinx()
-    left_axe.bar(category, bar_param[0], label=bar_param[1])
-    right_axe.plot(category, plot_param[0], label=plot_param[1])
+    left_axe.bar(category, bar_param[0], label=bar_param[1], width=0.4)
+    right_axe.plot(category, plot_param[0], label=plot_param[1], color='red', linewidth=2)
+
+    left_axe.xaxis.set_major_locator(xLocator)  # set the tick spacing
 
     box = left_axe.get_position()
-    left_axe.set_position([box.x0, box.y0 + box.height * 0.1,
+    left_axe.set_position([box.x0 - box.width * 0.03, box.y0 + box.height * 0.1,
                       box.width, box.height * 0.9])
     left_axe.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=9, frameon=False)
-    left_axe.ylabel(bar_param[1])
-    right_axe.ylabel(plot_param[1])
+    left_axe.set_ylabel(bar_param[1])
+    right_axe.set_ylabel(plot_param[1])
 
+    fig.savefig(imgdata, format='png')
+    imgdata.seek(0)
+    plt.clf()
+    plt.cla()
+    plt.close()
     return imgdata
 

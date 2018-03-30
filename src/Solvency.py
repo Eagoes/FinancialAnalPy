@@ -1,10 +1,8 @@
-from globalVar import safe_growth_rate, safe_div, get_ratio
-from BalanceSheet import *
-from CashFlowStatement import *
-from ProfitStatement import *
+from .globalVar import safe_growth_rate, safe_div, get_ratio
 from xlsxwriter.worksheet import Worksheet
+from xlsxwriter.utility import xl_rowcol_to_cell
 from copy import copy
-from ImgDrawer import *
+from .ImgDrawer import img_draw, bar_and_plot
 
 
 class Solvency:
@@ -20,12 +18,7 @@ class Solvency:
         :param prev_year_list: the sheet list of the previous year
         :param curr_year_list: the sheet list of the current year
         """
-        prev_bsheet = prev_year_list[0].get_data()
-        prev_psheet = prev_year_list[1].get_data()
-        prev_fsheet = prev_year_list[2].get_data()
         curr_bsheet = curr_year_list[0].get_data()
-        curr_psheet = curr_year_list[1].get_data()
-        curr_fsheet = curr_year_list[2].get_data()
         self.year = year
         self.data = {}
         # 资产负债率
@@ -77,6 +70,7 @@ class SolvData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of Solvency
             self.year2data[curr_year] = new_data
+        self.year_list.remove(self.year_list[0])
         self.avg_data = None  # the average data of the industry
         self.ratio = [0] * 3  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
@@ -94,9 +88,9 @@ class SolvData:
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
-            self.score += self.score[i]
+            self.score += self.ratio[i] * self.weight[i]
 
-    def write_data(self, sheet: Worksheet):
+    def write_data(self, sheet: Worksheet, merge_format):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
@@ -104,5 +98,82 @@ class SolvData:
         col = 1
         for year in self.year_list:
             year_data = self.year2data[year]
-            sheet.write_column(1, col, year_data.data_list)
+            sheet.write_column(27, col, year_data.data_list)
             col += 1
+        avg_col = 1 + len(self.year_list)  # “行业平均”数据所在列
+        ratio_col = 1 + avg_col  # “比率”数据所在列
+        sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
+        sheet.write_column(27, avg_col, self.avg_data)
+        sheet.write_column(27, ratio_col, self.ratio)
+        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(27, sub_score_col), xl_rowcol_to_cell(29, sub_score_col)),
+                          self.score, merge_format)
+
+    def write_xlsx(self, sheet: Worksheet, father):
+        graph1 = img_draw(
+            title="资产负债率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["assets_and_liabilities"] for year in self.year_list],
+                    "资产负债率",
+                    1
+                ],
+                [
+                    [0.4] * len(self.year_list),
+                    "lower",
+                    1
+                ],
+                [
+                    [0.6] * len(self.year_list),
+                    "higher",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(0, 0, "", {"image_data": graph1})
+
+        graph2 = img_draw(
+            title="流动比率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["current_ratio"] for year in self.year_list],
+                    "流动比率",
+                    1
+                ],
+                [
+                    [1.5] * len(self.year_list),
+                    "lower",
+                    1
+                ],
+                [
+                    [2] * len(self.year_list),
+                    "higher",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(20, 0, "", {"image_data": graph2})
+
+        graph3 = img_draw(
+            title="速动比率",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["quick_ratio"] for year in self.year_list],
+                    "速动比率",
+                    1
+                ],
+                [
+                    [1] * len(self.year_list),
+                    "lower",
+                    1
+                ],
+                [
+                    [1.5] * len(self.year_list),
+                    "higher",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(40, 0, "", {"image_data": graph3})

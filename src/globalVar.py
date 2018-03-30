@@ -1,5 +1,6 @@
 import re
 import pickle
+import os
 
 rex2 = r'<div class=\'tishi\'>(.*?)<\/div>'
 rex = r'dateArr = (.*?);'
@@ -176,8 +177,8 @@ season2date = {
     3 : ".09.30",
     4 : ".12.31"
 }
-
-id2name_dict = pickle.load(open("../bin/dict.bin", "rb"))
+module_path = os.path.split(os.path.dirname(__file__))[0]
+id2name_dict = pickle.load(open(module_path+"/bin/dict.bin", "rb"))
 
 
 def safe_div(dividend, divisor):

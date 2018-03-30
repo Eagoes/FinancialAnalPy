@@ -1,13 +1,14 @@
-from BalanceSheet import BalanceData
-from ProfitStatement import ProfitData
-from CashFlowStatement import CashData
-from DevAbility import *
-from CreateAbility import *
-from ProfitAbility import *
-from OperAbility import *
-from Solvency import *
-from globalVar import id2name_dict, season2date
-import xlsxwriter as xlw
+from .BalanceSheet import BalanceData
+from .ProfitStatement import ProfitData
+from .CashFlowStatement import CashData
+from .DevAbility import DevData, DevAbility
+from .CreateAbility import CreData, CreateAbility
+from .ProfitAbility import ProData, ProfitAbility
+from .OperAbility import OperData, OperAbility
+from .Solvency import SolvData, Solvency
+from .globalVar import id2name_dict, season2date, module_path
+from xlsxwriter import Workbook
+from xlsxwriter.utility import xl_rowcol_to_cell
 
 
 class Company:
@@ -80,12 +81,16 @@ class Company:
             + 0.1 * self.solv_data.score
         )
 
-    def write_xlsx(self, filepath='../result/'):
+    def write_xlsx(self, filepath=module_path+'/result/'):
         """
         output the company information and data to the excel 2007+ (.xlsx) file
         :param filepath: the dir of the excel file you want to create
         """
-        workbook = xlw.Workbook(filepath + self.stockid)
+        workbook = Workbook(filepath + self.stockid + ".xlsx")
+        merge_format = workbook.add_format({
+            "align": "center",
+            "valign": "center"
+        })
         year_list = list(self.year_set)
         year_list.sort()
 
@@ -101,10 +106,11 @@ class Company:
         indicator_sheet = workbook.add_worksheet('指标')
         # write the year of the indicator sheet
         col = 1
-        avg_col = 1 + len(year_list)  # “行业平均”数据所在列
+        avg_col = len(year_list)  # “行业平均”数据所在列
         ratio_col = 1 + avg_col  # “比率”数据所在列
         sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
         score_col = 1 + sub_score_col  # 公司得分所在列
+        year_list.pop(0)
         for year in year_list:
             indicator_sheet.write(0, col, year)
             col += 1
@@ -119,23 +125,27 @@ class Company:
         indicator_sheet.write_column(19, 0, OperAbility.data_name_list)
         indicator_sheet.write_column(27, 0, Solvency.data_name_list)
         # write the indicator data
-        self.dev_data.write_data(indicator_sheet)
-        self.cre_data.write_data(indicator_sheet)
-        self.pro_data.write_data(indicator_sheet)
-        self.cre_data.write_data(indicator_sheet)
-        self.cre_data.write_data(indicator_sheet)
+        self.dev_data.write_data(indicator_sheet, merge_format)
+        self.cre_data.write_data(indicator_sheet, merge_format)
+        self.pro_data.write_data(indicator_sheet, merge_format)
+        self.oper_data.write_data(indicator_sheet, merge_format)
+        self.solv_data.write_data(indicator_sheet, merge_format)
+        indicator_sheet.merge_range("%s:%s"%(xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(29, score_col)),
+                                    self.score, merge_format)
 
         dev_chart_sheet = workbook.add_worksheet('发展能力图表')
-        # add devlop ability chart output here
+        self.dev_data.write_xlsx(sheet=dev_chart_sheet, father=self)
 
         cre_chart_sheet = workbook.add_worksheet('创现能力图表')
-        # add create ability chart output here
+        self.cre_data.write_xlsx(sheet=cre_chart_sheet, father=self)
 
         pro_chart_sheet = workbook.add_worksheet('盈利能力图表')
-        # add profit ability chart output here
+        self.pro_data.write_xlsx(sheet=pro_chart_sheet, father=self)
 
         oper_chart_sheet = workbook.add_worksheet('运营能力图表')
-        # add operate ability chart output here
+        self.oper_data.write_xlsx(sheet=oper_chart_sheet, father=self)
 
         solv_chart_sheet = workbook.add_worksheet('偿债能力图表')
-        # add solvency chart output here
+        self.solv_data.write_xlsx(sheet=solv_chart_sheet, father=self)
+
+        workbook.close()

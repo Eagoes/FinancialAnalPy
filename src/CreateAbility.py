@@ -1,10 +1,8 @@
-from globalVar import safe_growth_rate, safe_div, get_ratio
-from BalanceSheet import *
-from CashFlowStatement import *
-from ProfitStatement import *
+from .globalVar import safe_growth_rate, safe_div, get_ratio
 from xlsxwriter.worksheet import Worksheet
+from xlsxwriter.utility import xl_rowcol_to_cell
 from copy import copy
-from ImgDrawer import *
+from .ImgDrawer import img_draw, bar_and_plot
 
 
 class CreateAbility:
@@ -92,6 +90,7 @@ class CreData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of CreateAbility
             self.year2data[curr_year] = new_data
+        self.year_list.remove(self.year_list[0])
         self.avg_data = None  # the average data of the industry
         self.ratio = [0] * 6  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
@@ -104,21 +103,111 @@ class CreData:
         """
         return self.year2data[year]
 
-    def write_data(self, sheet: Worksheet):
+    def write_data(self, sheet: Worksheet, merge_format):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
         """
-        col = 7
+        col = 1
         for year in self.year_list:
             year_data = self.year2data[year]
-            sheet.write_column(1, col, year_data.data_list)
+            sheet.write_column(6, col, year_data.data_list)
             col += 1
+        avg_col = 1 + len(self.year_list)  # “行业平均”数据所在列
+        ratio_col = 1 + avg_col  # “比率”数据所在列
+        sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
+        sheet.write_column(6, avg_col, self.avg_data)
+        sheet.write_column(6, ratio_col, self.ratio)
+        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(6, sub_score_col), xl_rowcol_to_cell(11, sub_score_col)),
+                          self.score, merge_format)
 
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
-            self.score += self.score[i]
+            self.score += self.ratio[i] * self.weight[i]
 
+    def write_xlsx(self, sheet: Worksheet, father):
+        graph1 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.cash_data.get_sheet(year).data["net_cash_op"] for year in self.year_list],
+                "经营现金流"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["operating_cash_growth_rate"] for year in self.year_list],
+                "经营现金增长率"
+            ]
+        )
+        sheet.insert_image(0, 0, "", {"image_data": graph1})
+
+        graph2 = img_draw(
+            title = "",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [father.dev_data.get_indicator(year).data["sales_growth_rate"] for year in self.year_list],
+                    "销售增长率",
+                    1
+                ],
+                [
+                    [self.get_indicator(year).data["operating_cash_growth_rate"] for year in self.year_list],
+                    "经营现金增长率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(20, 0, "", {"image_data": graph2})
+
+        graph3 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.cash_data.get_sheet(year).data["final_cash"] for year in self.year_list],
+                "期末现金流"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["cash_flow_growth_rate"] for year in self.year_list],
+                "现金流量增长率"
+            ]
+        )
+        sheet.insert_image(40, 0, "", {"image_data": graph3})
+
+        graph4 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [self.get_indicator(year).data["free_cash_ratio"] for year in self.year_list],
+                "自由现金流"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["sales_and_operating_cash_ratio"] for year in self.year_list],
+                "销售自由现金比"
+            ]
+        )
+        sheet.insert_image(60, 0, "", {"image_data": graph4})
+
+        graph5 = img_draw(
+            title="销售经营现金比",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_and_operating_cash_ratio"] for year in self.year_list],
+                    "销售经营现金比",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(80, 0, "", {"image_data": graph5})
+
+        graph6 = img_draw(
+            title="销售现金比",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["sales_cash_ratio"] for year in self.year_list],
+                    "销售现金比",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(100, 0, "", {"image_data": graph6})

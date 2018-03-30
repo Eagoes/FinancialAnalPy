@@ -1,10 +1,8 @@
-from globalVar import safe_growth_rate, safe_div, get_ratio
-from BalanceSheet import *
-from CashFlowStatement import *
-from ProfitStatement import *
+from .globalVar import safe_growth_rate, safe_div, get_ratio
 from xlsxwriter.worksheet import Worksheet
+from xlsxwriter.utility import xl_rowcol_to_cell
 from copy import copy
-from ImgDrawer import *
+from .ImgDrawer import img_draw, bar_and_plot
 
 
 class OperAbility:
@@ -113,6 +111,7 @@ class OperData:
                 prev_year_list=annual_data[prev_year]
             )  # make a new instance of OperAbility
             self.year2data[curr_year] = new_data
+        self.year_list.remove(self.year_list[0])
         self.avg_data = None  # the average data of the industry
         self.ratio = [0] * 8  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
@@ -130,9 +129,9 @@ class OperData:
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
-            self.score += self.score[i]
+            self.score += self.ratio[i] * self.weight[i]
 
-    def write_data(self, sheet: Worksheet):
+    def write_data(self, sheet: Worksheet, merge_format):
         """
         write the indicator data to the indicator sheet
         :param sheet: indicator sheet which is a xlsxwriter.Worksheet instance
@@ -140,5 +139,124 @@ class OperData:
         col = 1
         for year in self.year_list:
             year_data = self.year2data[year]
-            sheet.write_column(1, col, year_data.data_list)
+            sheet.write_column(19, col, year_data.data_list)
             col += 1
+        avg_col = 1 + len(self.year_list)  # “行业平均”数据所在列
+        ratio_col = 1 + avg_col  # “比率”数据所在列
+        sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
+        sheet.write_column(19, avg_col, self.avg_data)
+        sheet.write_column(19, ratio_col, self.ratio)
+        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(19, sub_score_col), xl_rowcol_to_cell(26, sub_score_col)),
+                          self.score, merge_format)
+
+    def write_xlsx(self, sheet: Worksheet, father):
+        graph1 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.profit_data.get_sheet(year).data["selling_expenses"] for year in self.year_list],
+                "销售费用"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["sales_expense_rate"] for year in self.year_list],
+                "销售费用率"
+            ]
+        )
+        sheet.insert_image(0, 0, "", {"image_data": graph1})
+
+        graph2 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.profit_data.get_sheet(year).data["management_fees"] for year in self.year_list],
+                "管理费用"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["management_fee_rate"] for year in self.year_list],
+                "管理费用率"
+            ]
+        )
+        sheet.insert_image(20, 0, "", {"image_data": graph2})
+
+        graph3 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [(
+                    father.profit_data.get_sheet(year).data["management_fees"] +
+                    father.profit_data.get_sheet(year).data["selling_expenses"]
+                ) for year in self.year_list],
+                "销售费用+管理费用"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["sales_management_fee_rate"] for year in self.year_list],
+                "销售管理费用"
+            ]
+        )
+        sheet.insert_image(40, 0, "", {"image_data": graph3})
+
+        graph4 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [(
+                    father.profit_data.get_sheet(year).data["management_fees"] +
+                    father.profit_data.get_sheet(year).data["selling_expenses"] +
+                    father.profit_data.get_sheet(year).data["financial_expenses"]
+                ) for year in self.year_list],
+                "期间费用"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["period_expense_rate"] for year in self.year_list],
+                "期间费用率"
+            ]
+        )
+        sheet.insert_image(60, 0, "", {"image_data": graph4})
+
+        graph5 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.balance_data.get_sheet(year).data["total_assets"] for year in self.year_list],
+                "资产总计"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["asset_turnover_days"] for year in self.year_list],
+                "资产周转天数"
+            ]
+        )
+        sheet.insert_image(80, 0, "", {"image_data": graph5})
+
+        graph6 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.balance_data.get_sheet(year).data["accounts_receivable"] for year in self.year_list],
+                "应收账款"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["accounts_receivable_turnover_days"] for year in self.year_list],
+                "应收账款周转天数"
+            ]
+        )
+        sheet.insert_image(100, 0, "", {"image_data": graph6})
+
+        graph7 = bar_and_plot(
+            category=self.year_list,
+            bar_param=[
+                [father.balance_data.get_sheet(year).data["stock"] for year in self.year_list],
+                "存货"
+            ],
+            plot_param=[
+                [self.get_indicator(year).data["inventory_turnover_days"] for year in self.year_list],
+                "存货周转天数"
+            ]
+        )
+        sheet.insert_image(120, 0, "", {"image_data": graph7})
+
+        graph8 = img_draw(
+            title="营业周期",
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["business_cycle"] for year in self.year_list],
+                    "营业周期",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(140, 0, "", {"image_data": graph8})
