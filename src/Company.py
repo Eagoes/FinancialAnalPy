@@ -133,19 +133,19 @@ class Company:
         indicator_sheet.merge_range("%s:%s"%(xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(29, score_col)),
                                     self.score, merge_format)
 
-        dev_chart_sheet = workbook.add_worksheet('发展能力图表')
+        dev_chart_sheet = workbook.add_worksheet('发展能力')
         self.dev_data.write_xlsx(sheet=dev_chart_sheet, father=self)
 
-        cre_chart_sheet = workbook.add_worksheet('创现能力图表')
+        cre_chart_sheet = workbook.add_worksheet('创现能力')
         self.cre_data.write_xlsx(sheet=cre_chart_sheet, father=self)
 
-        pro_chart_sheet = workbook.add_worksheet('盈利能力图表')
+        pro_chart_sheet = workbook.add_worksheet('盈利能力')
         self.pro_data.write_xlsx(sheet=pro_chart_sheet, father=self)
 
-        oper_chart_sheet = workbook.add_worksheet('运营能力图表')
+        oper_chart_sheet = workbook.add_worksheet('运营能力')
         self.oper_data.write_xlsx(sheet=oper_chart_sheet, father=self)
 
-        solv_chart_sheet = workbook.add_worksheet('偿债能力图表')
+        solv_chart_sheet = workbook.add_worksheet('偿债能力')
         self.solv_data.write_xlsx(sheet=solv_chart_sheet, father=self)
 
         workbook.close()

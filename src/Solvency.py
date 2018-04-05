@@ -149,7 +149,8 @@ class SolvData:
                     "最佳值",
                     1
                 ]
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(20, 0, "", {"image_data": graph2})
 
@@ -171,6 +172,7 @@ class SolvData:
                     "合理值",
                     1
                 ]
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(40, 0, "", {"image_data": graph3})

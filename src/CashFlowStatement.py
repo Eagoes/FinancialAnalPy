@@ -9,6 +9,7 @@ class CashFlowStatement:
         self.data_list = []
         self.data = {}
         self.year = year
+        self.date = date
         temp_date = str(year) + date
         web = 'http://stockdata.stock.hexun.com/2008/xjll.aspx?stockid=' + stockid + '&accountdate=' + temp_date
         msg = get_page(web)
@@ -54,6 +55,7 @@ class CashData:
         """
         self.year_set = set()
         self.year2sheet = {}
+        self.date = date
         web = 'http://stockdata.stock.hexun.com/2008/xjll.aspx?stockid='+stockid+'&accountdate='
         msg = get_page(web)
         if msg is None:
@@ -99,6 +101,6 @@ class CashData:
     def write_data(self, sheet: Worksheet, year_list):
         row = 0
         for year in year_list:
-            sheet.write(row, 0, year)
+            sheet.write(row, 0, str(year)+self.date)
             sheet.write_row(row, 1, self.get_sheet(year).data_list)
             row += 1
