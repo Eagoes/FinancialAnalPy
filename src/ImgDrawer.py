@@ -47,7 +47,7 @@ def img_draw(category: list,  plot_params: list, use_percent=True):
     axe.xaxis.set_major_locator(xLocator)
 
     if use_percent:
-        yticks = mtick.PercentFormatter(xmax=1)
+        yticks = mtick.PercentFormatter(xmax=1, decimals=0)
         axe.yaxis.set_major_formatter(yticks)
 
     # box = axe.get_position()
@@ -89,7 +89,7 @@ def bar_and_plot(category: list, bar_param: list, plot_param:list, use_percent=T
     # set the tick spacing
     left_axe.xaxis.set_major_locator(xLocator)
     if use_percent:
-        yticks = mtick.PercentFormatter(xmax=1)
+        yticks = mtick.PercentFormatter(xmax=1, decimals=0)
         right_axe.yaxis.set_major_formatter(yticks)
 
     # place the legend and the labels

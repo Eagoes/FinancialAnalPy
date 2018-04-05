@@ -3,6 +3,6 @@
   "start year": 2012,
   "final year": 2016,
   "season": 4,
-  "load from file": false,
+  "load from file": true,
   "write to file": true
 }
