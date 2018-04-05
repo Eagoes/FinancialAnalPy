@@ -22,7 +22,7 @@ class CashFlowStatement:
                 else:
                     s = htmlslice.replace(",", "")
                     try:
-                        self.data_list.append(float(s))
+                        self.data_list.append(float(s) / (10 ** 8))
                     except ValueError:
                         pass
         for i in range(len(cash_sheet_content)):

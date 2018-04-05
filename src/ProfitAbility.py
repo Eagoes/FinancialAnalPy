@@ -186,8 +186,8 @@ class ProData:
             category=self.year_list,
             plot_params=[
                 [
-                    [self.get_indicator(year).data["sales_operating_profit_margin"] for year in self.year_list],
-                    "销售营业利润率",
+                    [self.get_indicator(year).data["sales_gross_margin"] for year in self.year_list],
+                    "销售毛利率",
                     1
                 ],
                 [

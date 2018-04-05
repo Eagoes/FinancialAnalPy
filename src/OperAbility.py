@@ -187,7 +187,7 @@ class OperData:
             ],
             plot_param=[
                 [self.get_indicator(year).data["sales_management_fee_rate"] for year in self.year_list],
-                "销售管理费用"
+                "销售管理费用率"
             ]
         )
         sheet.insert_image(40, 0, "", {"image_data": graph3})
@@ -218,7 +218,8 @@ class OperData:
             plot_param=[
                 [self.get_indicator(year).data["asset_turnover_days"] for year in self.year_list],
                 "资产周转天数"
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(80, 0, "", {"image_data": graph5})
 
@@ -231,7 +232,8 @@ class OperData:
             plot_param=[
                 [self.get_indicator(year).data["accounts_receivable_turnover_days"] for year in self.year_list],
                 "应收账款周转天数"
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(100, 0, "", {"image_data": graph6})
 
@@ -244,7 +246,8 @@ class OperData:
             plot_param=[
                 [self.get_indicator(year).data["inventory_turnover_days"] for year in self.year_list],
                 "存货周转天数"
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(120, 0, "", {"image_data": graph7})
 
@@ -256,6 +259,7 @@ class OperData:
                     "营业周期",
                     1
                 ]
-            ]
+            ],
+            use_percent=False
         )
         sheet.insert_image(140, 0, "", {"image_data": graph8})

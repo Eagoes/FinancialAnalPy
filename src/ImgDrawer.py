@@ -38,7 +38,7 @@ def img_draw(category: list,  plot_params: list, use_percent=True):
     plt.rcParams['font.sans-serif'] = ['SimHei']
     plt.rcParams['axes.unicode_minus'] = False
     xLocator = MultipleLocator(1)
-    fig, axe = plt.subplots(figsize=(5, 3))
+    fig, axe = plt.subplots(figsize=(7,4))
     for info in plot_params:
         if info[2] == 1:  # use the plot method
             axe.plot(category, info[0], label=info[1])
@@ -65,7 +65,7 @@ def img_draw(category: list,  plot_params: list, use_percent=True):
     return imgdata
 
 
-def bar_and_plot(category: list, bar_param: list, plot_param:list):
+def bar_and_plot(category: list, bar_param: list, plot_param:list, use_percent=True):
     """
     the function that draws an image contains a bar axis and a plot axis
     :param category: data of the x axis
@@ -77,7 +77,7 @@ def bar_and_plot(category: list, bar_param: list, plot_param:list):
     plt.rcParams['font.sans-serif'] = ['SimHei']
     plt.rcParams['axes.unicode_minus'] = False
     xLocator = MultipleLocator(1)
-    fig, left_axe = plt.subplots(figsize=(5, 3))
+    fig, left_axe = plt.subplots(figsize=(7, 4))
     right_axe = left_axe.twinx()
     left_axe.bar(category, bar_param[0], label=bar_param[1], width=0.4)
     right_axe.plot(category, plot_param[0], label=plot_param[1], color='red', linewidth=2)
@@ -88,8 +88,9 @@ def bar_and_plot(category: list, bar_param: list, plot_param:list):
 
     # set the tick spacing
     left_axe.xaxis.set_major_locator(xLocator)
-    yticks = mtick.PercentFormatter(xmax=1)
-    right_axe.yaxis.set_major_formatter(yticks)
+    if use_percent:
+        yticks = mtick.PercentFormatter(xmax=1)
+        right_axe.yaxis.set_major_formatter(yticks)
 
     # place the legend and the labels
     # box = left_axe.get_position()
