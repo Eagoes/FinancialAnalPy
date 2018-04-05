@@ -86,7 +86,7 @@ class Company:
         output the company information and data to the excel 2007+ (.xlsx) file
         :param filepath: the dir of the excel file you want to create
         """
-        workbook = Workbook(filepath + self.stockid + ".xlsx")
+        workbook = Workbook(filepath + self.name + ".xlsx")
         merge_format = workbook.add_format({
             "align": "center",
             "valign": "center"

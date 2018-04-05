@@ -147,7 +147,6 @@ class ProData:
 
     def write_xlsx(self, sheet: Worksheet, father):
         graph1 = img_draw(
-            title="销售毛利率",
             category=self.year_list,
             plot_params=[
                 [
@@ -160,7 +159,6 @@ class ProData:
         sheet.insert_image(0, 0, "", {"image_data": graph1})
 
         graph2 = img_draw(
-            title="销售营业利润率",
             category=self.year_list,
             plot_params=[
                 [
@@ -173,7 +171,6 @@ class ProData:
         sheet.insert_image(20, 0, "", {"image_data": graph2})
 
         graph3 = img_draw(
-            title="销售净利率",
             category=self.year_list,
             plot_params=[
                 [
@@ -186,7 +183,6 @@ class ProData:
         sheet.insert_image(40, 0, "", {"image_data": graph3})
 
         graph4 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
@@ -209,7 +205,6 @@ class ProData:
         sheet.insert_image(60, 0, "", {"image_data": graph4})
 
         graph5 = img_draw(
-            title="净资产收益率",
             category=self.year_list,
             plot_params=[
                 [
@@ -222,7 +217,6 @@ class ProData:
         sheet.insert_image(80, 0, "", {"image_data": graph5})
 
         graph6 = img_draw(
-            title="资产报酬率",
             category=self.year_list,
             plot_params=[
                 [
@@ -235,7 +229,6 @@ class ProData:
         sheet.insert_image(100, 0, "", {"image_data": graph6})
 
         graph7 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
@@ -253,7 +246,6 @@ class ProData:
         sheet.insert_image(120, 0, "", {"image_data": graph7})
 
         graph8 = img_draw(
-            title="每股收益",
             category=self.year_list,
             plot_params=[
                 [
@@ -266,7 +258,6 @@ class ProData:
         sheet.insert_image(140, 0, "", {"image_data": graph8})
 
         graph9 = img_draw(
-            title="资本运营收益率",
             category=self.year_list,
             plot_params=[
                 [

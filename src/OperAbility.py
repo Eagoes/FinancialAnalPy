@@ -249,7 +249,6 @@ class OperData:
         sheet.insert_image(120, 0, "", {"image_data": graph7})
 
         graph8 = img_draw(
-            title="营业周期",
             category=self.year_list,
             plot_params=[
                 [

@@ -143,7 +143,6 @@ class CreData:
         sheet.insert_image(0, 0, "", {"image_data": graph1})
 
         graph2 = img_draw(
-            title = "",
             category=self.year_list,
             plot_params=[
                 [
@@ -187,7 +186,6 @@ class CreData:
         sheet.insert_image(60, 0, "", {"image_data": graph4})
 
         graph5 = img_draw(
-            title="销售经营现金比",
             category=self.year_list,
             plot_params=[
                 [
@@ -200,7 +198,6 @@ class CreData:
         sheet.insert_image(80, 0, "", {"image_data": graph5})
 
         graph6 = img_draw(
-            title="销售现金比",
             category=self.year_list,
             plot_params=[
                 [

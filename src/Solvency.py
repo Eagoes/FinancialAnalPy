@@ -110,7 +110,6 @@ class SolvData:
 
     def write_xlsx(self, sheet: Worksheet, father):
         graph1 = img_draw(
-            title="资产负债率",
             category=self.year_list,
             plot_params=[
                 [
@@ -120,12 +119,12 @@ class SolvData:
                 ],
                 [
                     [0.4] * len(self.year_list),
-                    "lower",
+                    "下限值",
                     1
                 ],
                 [
                     [0.6] * len(self.year_list),
-                    "higher",
+                    "上限值",
                     1
                 ]
             ]
@@ -133,7 +132,6 @@ class SolvData:
         sheet.insert_image(0, 0, "", {"image_data": graph1})
 
         graph2 = img_draw(
-            title="流动比率",
             category=self.year_list,
             plot_params=[
                 [
@@ -143,12 +141,12 @@ class SolvData:
                 ],
                 [
                     [1.5] * len(self.year_list),
-                    "lower",
+                    "合理值",
                     1
                 ],
                 [
                     [2] * len(self.year_list),
-                    "higher",
+                    "最佳值",
                     1
                 ]
             ]
@@ -156,7 +154,6 @@ class SolvData:
         sheet.insert_image(20, 0, "", {"image_data": graph2})
 
         graph3 = img_draw(
-            title="速动比率",
             category=self.year_list,
             plot_params=[
                 [
@@ -166,12 +163,12 @@ class SolvData:
                 ],
                 [
                     [1] * len(self.year_list),
-                    "lower",
+                    "最低值",
                     1
                 ],
                 [
                     [1.5] * len(self.year_list),
-                    "higher",
+                    "合理值",
                     1
                 ]
             ]

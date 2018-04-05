@@ -14,6 +14,7 @@ class Industry(Company):
         :param curr_year: using for updating the final year
         """
         self.year_set = set()
+        self.name = "total"
         self.stockid = "total"
         self.balance_data = None  # 资产负债表
         self.profit_data = None  # 利润表
