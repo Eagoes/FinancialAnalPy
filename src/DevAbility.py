@@ -162,7 +162,6 @@ class DevData:
         sheet.insert_image(19, 0, "", {"image_data": graph2})
 
         graph3 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
@@ -193,7 +192,6 @@ class DevData:
         sheet.insert_image(59, 0, "", {"image_data": graph4})
 
         graph5 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
@@ -224,7 +222,6 @@ class DevData:
         sheet.insert_image(99, 0, "", {"image_data": graph6})
 
         graph7 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
@@ -255,7 +252,6 @@ class DevData:
         sheet.insert_image(139, 0, "", {"image_data": graph8})
 
         graph9 = img_draw(
-            title="",
             category=self.year_list,
             plot_params=[
                 [
