@@ -65,7 +65,7 @@ class OperAbility:
         # 存货周转天数
         self.data["inventory_turnover_days"] = safe_div(
             dividend=180 * (curr_bsheet["stock"] + prev_bsheet["stock"]),
-            divisor=curr_psheet["operating_income"]
+            divisor=curr_psheet["operating_cost"]
         )
         # 营业周期
         self.data["business_cycle"] = (
@@ -82,7 +82,6 @@ class OperAbility:
             self.data["inventory_turnover_days"],
             self.data["business_cycle"]
         ]
-
 
     def get_data(self):
         return self.data

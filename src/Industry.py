@@ -25,12 +25,9 @@ class Industry(Company):
         self.cre_data = None  # 创现能力
         self.solv_data = None  # 偿债能力
         self.annual_data = {}
-        for i in range(1997, curr_year+1):
-            self.year_set.add(i)
         for company in company_list:
-            self.year_set &= company.year_set
+            self.year_set |= company.year_set
         for company in company_list:
-            company.trim_year_set(master_set=self.year_set)
             self.__get_data_from_company(company=company)
         for year in self.year_set:
             self.annual_data[year] = [
@@ -42,26 +39,38 @@ class Industry(Company):
     def __add_balance(self, company : Company):
         other_bdata = company.balance_data
         self_bdata = self.balance_data
-        for year in self.year_set:
+        for year in company.year_set:
             other_bsheet = other_bdata.get_sheet(year=year)
             self_bsheet = self_bdata.get_sheet(year=year)
-            self_bsheet.data_add(other_bsheet)
+            if self_bsheet is not None:
+                self_bsheet.data_add(other_bsheet)
+            else:
+                self.balance_data.year_set.add(year)
+                self.balance_data.year2sheet[year] = deepcopy(other_bsheet)
 
     def __add_profit(self, company : Company):
         other_pdata = company.profit_data
         self_pdata = self.profit_data
-        for year in self.year_set:
+        for year in company.year_set:
             other_psheet = other_pdata.get_sheet(year=year)
             self_psheet = self_pdata.get_sheet(year=year)
-            self_psheet.data_add(other_psheet)
+            if self_psheet is not None:
+                self_psheet.data_add(other_psheet)
+            else:
+                self.profit_data.year_set.add(year)
+                self.profit_data.year2sheet[year] = deepcopy(other_psheet)
 
     def __add_cash(self, company : Company):
         other_fdata = company.cash_data
         self_fdata = self.cash_data
-        for year in self.year_set:
+        for year in company.year_set:
             other_fsheet = other_fdata.get_sheet(year=year)
             self_fsheet = self_fdata.get_sheet(year=year)
-            self_fsheet.data_add(other_fsheet)
+            if self_fsheet is not None:
+                self_fsheet.data_add(other_fsheet)
+            else:
+                self.cash_data.year_set.add(year)
+                self.cash_data.year2sheet[year] = deepcopy(other_fsheet)
 
     def __get_data_from_company(self, company : Company):
         if self.balance_data is None:

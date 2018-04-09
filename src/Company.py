@@ -9,6 +9,7 @@ from .Solvency import SolvData, Solvency
 from .globalVar import id2name_dict, season2date, module_path
 from xlsxwriter import Workbook
 from xlsxwriter.utility import xl_rowcol_to_cell
+from copy import copy
 
 
 class Company:
@@ -41,6 +42,7 @@ class Company:
         :param master_set: a year set that three data set must be trimmed to be similar to it
         :return: no return
         """
+        self.year_set = copy(master_set)
         sub_set = self.balance_data.year_set - master_set
         for year in sub_set:
             self.balance_data.del_sheet(year=year)  # remove the sheet whose year is not in the master set
@@ -56,9 +58,9 @@ class Company:
             run. if the method is called later when all the companies unify their year set, their annual data dictionary
             should also be trimmed.
             '''
-            for key, value in self.annual_data.items():
-                if key not in master_set:
-                    self.annual_data.pop(key)
+            sub_key_set = self.annual_data.keys() - master_set
+            for key in sub_key_set:
+                self.annual_data.pop(key)
 
     def calculate(self):
         """

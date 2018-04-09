@@ -87,7 +87,11 @@ class BalanceData:
         :param year: year of the sheet we want
         :return: instance of the balance sheet of the year in the company
         """
-        return self.year2sheet[year]
+        try:
+            ret = self.year2sheet[year]
+        except KeyError:
+            ret = None
+        return ret
 
     def del_sheet(self, year):
         """
@@ -96,7 +100,7 @@ class BalanceData:
         """
         if year in self.year_set:
             self.year_set.remove(year)
-            self.year2sheet.pop(k=year, default=None)
+            self.year2sheet.pop(year)
 
     def write_data(self, sheet: Worksheet, year_list):
         row = 0
