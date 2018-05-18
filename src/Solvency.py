@@ -23,8 +23,8 @@ class Solvency:
         self.data = {}
         # 资产负债率
         self.data["assets_and_liabilities"] = safe_div(
-            dividend=curr_bsheet["total_liabilities"],
-            divisor=curr_bsheet["total_assets"]
+            divisor=curr_bsheet["total_assets"],
+            dividend=curr_bsheet["total_liabilities"]
         )
         # 流动比率
         self.data["current_ratio"] = safe_div(
