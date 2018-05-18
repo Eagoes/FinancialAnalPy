@@ -36,11 +36,8 @@ class CreateAbility:
             dividend=curr_fsheet["final_cash"],
             divisor=prev_fsheet["final_cash"]
         )
-        # 自由现金比
-        self.data["free_cash_ratio"] = safe_div(
-            dividend=curr_fsheet["net_cash_op"] - curr_fsheet["cash_paid_fa"],
-            divisor=curr_psheet["operating_income"]
-        )
+        # 自由现金流
+        self.data["free_cash_ratio"] = curr_fsheet["net_cash_op"] - curr_fsheet["cash_paid_fa"]
         # 销售经营现金比
         self.data["sales_and_operating_cash_ratio"] = safe_div(
             dividend=curr_fsheet["net_cash_op"],
