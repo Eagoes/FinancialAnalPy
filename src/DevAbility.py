@@ -76,7 +76,7 @@ class DevData:
         :param year_set: catch the year set from Company instance and calculate the develop ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
-        self.weight = [25, 15, 20, 25, 15]
+        self.weight = [30, 25, 20, 15, 10]
         self.year_list = list(year_set)
         self.year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is DevAbility
@@ -123,6 +123,9 @@ class DevData:
 
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
+        for i in range(len(avg_data)):
+            if avg_data[i] < 0:
+                avg_data[i] = 0.01
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])

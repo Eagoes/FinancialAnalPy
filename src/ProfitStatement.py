@@ -104,8 +104,9 @@ class ProfitData:
             self.year2sheet.pop(year)
 
     def write_data(self, sheet: Worksheet, year_list):
-        row = 0
+        sheet.write_column(1, 0, profit_sheet_content_zh)
+        col = 1
         for year in year_list:
-            sheet.write(row, 0, str(year)+self.date)
-            sheet.write_row(row, 1, self.get_sheet(year).data_list)
-            row += 1
+            sheet.write(0, col, str(year) + self.date)
+            sheet.write_column(1, col, self.get_sheet(year).data_list)
+            col += 1

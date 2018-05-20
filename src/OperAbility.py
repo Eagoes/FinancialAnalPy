@@ -8,6 +8,7 @@ from .ImgDrawer import img_draw, bar_and_plot
 class OperAbility:
     data_name_list = [
         "销售费用率",
+        "销售回款率",
         "管理费用率",
         "销售管理费用率",
         "期间费用率",
@@ -26,11 +27,17 @@ class OperAbility:
         prev_bsheet = prev_year_list[0].get_data()
         curr_bsheet = curr_year_list[0].get_data()
         curr_psheet = curr_year_list[1].get_data()
+        curr_fsheet = curr_year_list[2].get_data()
         self.year = year
         self.data = {}
         # 销售费用率
         self.data["sales_expense_rate"] = safe_div(
             dividend=curr_psheet["selling_expenses"],
+            divisor=curr_psheet["operating_income"]
+        )
+        # 销售回款率
+        self.data["repayment_rate_of_sales"] = safe_div(
+            dividend=curr_fsheet["cash_from_sale"],
             divisor=curr_psheet["operating_income"]
         )
         # 管理费用率
@@ -97,7 +104,7 @@ class OperData:
         :param year_set: catch the year set from Company instance and calculate the operation ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
-        self.weight = [0, 0, 10, 20, 30, 20, 20, 0]
+        self.weight = [0, 0, 0, 10, 20, 30, 20, 20, 0]
         self.year_list = list(year_set)
         self.year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is OperAbility
@@ -112,7 +119,7 @@ class OperData:
             self.year2data[curr_year] = new_data
         self.year_list.remove(self.year_list[0])
         self.avg_data = None  # the average data of the industry
-        self.ratio = [0] * 8  # the limited ratio between the company data and the average data
+        self.ratio = [0] * 9  # the limited ratio between the company data and the average data
         self.score = 0  # the final score of the company ability which is related to the ratio and the score weight
 
     def get_indicator(self, year):
@@ -125,6 +132,9 @@ class OperData:
 
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
+        for i in range(len(avg_data)):
+            if avg_data[i] < 0:
+                avg_data[i] = 0.01
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])

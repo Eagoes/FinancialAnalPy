@@ -1,5 +1,7 @@
 from .Company import Company
 from copy import deepcopy, copy
+from xlsxwriter.workbook import Workbook
+from .globalVar import module_path
 
 
 class Industry(Company):
@@ -25,6 +27,7 @@ class Industry(Company):
         self.cre_data = None  # 创现能力
         self.solv_data = None  # 偿债能力
         self.annual_data = {}
+        self.company_list = copy(company_list)
         for company in company_list:
             self.year_set |= company.year_set
         for company in company_list:
@@ -107,3 +110,23 @@ class Industry(Company):
             company.oper_data.get_avg_data(avg_data=avg_oper_data)
             company.solv_data.get_avg_data(avg_data=avg_solv_data)
             company.get_score()
+
+    def write_score_xlsx(self, filepath=module_path+'/result/'):
+        workbook = Workbook(filepath + "score.xlsx")
+        sheet = workbook.add_worksheet()
+        sheet.write_row(0, 0, ["公司名称", "综合", "发展能力", "创现能力", "盈利能力", "运营能力", "偿债能力"])
+        row = 1
+        for company in self.company_list:
+            cre_score = company.cre_data.score
+            dev_score = company.dev_data.score
+            oper_score = company.oper_data.score
+            pro_score = company.pro_data.score
+            solv_score = company.solv_data.score
+            comp_score = company.score
+            score_list = [
+                company.name, cre_score, dev_score, oper_score,
+                pro_score, solv_score, comp_score
+            ]
+            sheet.write_row(row, 0, score_list)
+            row += 1
+        workbook.close()

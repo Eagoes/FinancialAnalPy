@@ -79,6 +79,76 @@ asset_sheet_content = [
     "total_liabilities_and_owners_equity"  # 负债和所有者权益
 ]
 
+asset_sheet_content_zh = [
+    "货币资金",
+    "交易性金融资产",
+    "应收票据",
+    "应收账款",
+    "预收款项",
+    "其他应收款",
+    "应收关联公司款",
+    "应收利息",
+    "应收股利",
+    "存货",
+    "消耗性生物资产",
+    "一年内到期的非流动性资产",
+    "其他流动资产",
+    "流动资产合计",
+    "可供出售金融资产",
+    "持有至到期投资",
+    "长期应收款",
+    "长期股权投资",
+    "投资性房地产",
+    "固定资产",
+    "在建工程",
+    "工程物资",
+    "固定资产清理",
+    "生产性生物资产",
+    "油气资产",
+    "无形资产",
+    "开发支出",
+    "商誉",
+    "长期待摊费用",
+    "递延所得税资产",
+    "其他非流动资产",
+    "非流动资产合计",
+    "资产总计",
+    "短期借款",
+    "交易行金融资产",
+    "应付票据",
+    "应付账款",
+    "预收账款",
+    "应付职工薪酬",
+    "应交税费",
+    "应付利息",
+    "应付股利",
+    "其他应付款",
+    "应付关联公司款",
+    "一年内到期的非流动负债",
+    "其他流动负债",
+    "流动负债合计",
+    "长期借款",
+    "应付债券",
+    "长期应付款",
+    "专项应付款",
+    "预计负债",
+    "递延所得税负债",
+    "其他非流动负债",
+    "非流动负债合计",
+    "负债合计",
+    "实收资本",
+    "资本公积",
+    "盈余公积",
+    "库存股",
+    "未分配利润",
+    "少数股东权益",
+    "外币报表折算差价",
+    "非正常经营项目收益调整",
+    "归属母公司所有者权益",
+    "所有者权益",
+    "负债和所有者权益"
+]
+
 profit_sheet_content = [
     "operating_income",  #营业收入
     "operating_cost",  #营业成本
@@ -107,6 +177,36 @@ profit_sheet_content = [
     "earnings_per_share",  #每股收益
     "basic_earnings_per_share",  #基本每股收益
     "diluted_earnings_per_share"  #稀释每股收益
+]
+
+profit_sheet_content_zh = [
+  "营业收入",
+  "营业成本",
+  "营业税金及附加",
+  "销售费用",
+  "管理费用",
+  "勘探费用",
+  "财务费用",
+  "资产减值损失",
+  "公允价值变动净收益",
+  "投资收益",
+  "对联营企业和合营企业的投资收益",
+  "影响营业利润的其他科目",
+  "营业利润",
+  "补贴收入",
+  "营业外收入",
+  "营业外支出",
+  "非流动资产处置净损失",
+  "影响利润总额的其他科目",
+  "利润总额",
+  "所得税",
+  "影响净利润的其他科目",
+  "净利润",
+  "归属于母公司所有者的净利润",
+  "少数股东损益",
+  "每股收益",
+  "基本每股收益",
+  "稀释每股收益",
 ]
 
 cash_sheet_content = [
@@ -144,31 +244,93 @@ cash_sheet_content = [
     "initial_cash",  #期初现金及现金等价物余额
     "final_cash",  #期末现金及现金等价物余额
     "net_profit",  #净利润
-	"asset_impairment_loss",  #资产减值准备
-	"fixed_assets_depreciation",  #固定资产折旧、油气资产消耗、生产性生物资产折旧
-	"intangible_assets_amortize",  #无形资产费用摊销
-	"long_term_prepaid_expenses_amortization",  #长期待摊费用摊销
-	"the_disposal_of_fixed_assets",  #处置固定资产、无形资产、和其他长期资产收回的损失
-	"fixed_assets_scrap_loss"  #固定资产报废损失
-	"losses_on_the_changes_in_the_fair_value",  #公允价值变动损失
-	"finance_charges",  #财务费用
-	"investment_losses",  #投资损失
-	"deferred_tax_assets",  #递延所得税资产减少
-	"deferred_income_tax_liabilities",  #递延所得税负债增加
-	"the_decrease_of_inventory",  #存货的减少
-	"a_drop_in_business_receivables",  #经营性应收项目的减少
-	"business_to_cope_with_the_increase_of_the_project",  #经营性应付项目的增加
-	"other",  #其他
-	"business_activities_generated_cash_flow_net_2",  #经营活动产生的现金流量净额
-	"a_debt_into_capital",  #负债转为资本
-	"convertible_bonds_matured_within_a_year",  #一年内到期的可转换公司债券
-	"for_fixed_assets",  #融资租入固定资产
-	"the_ending_balance_of_cash",  #现金的期末余额
-	"the_beginning_balance_of_cash",  #现金的期初余额
-	"cash_equivalents_of_the_final_balance",  #现金等价物的期末余额
-	"the_beginning_balance_of_cash_equivalents",  #现金等价物的期初余额
-	"other_reasons_the_impact_on_the_cash_2",  #其他原因对现金的影响
-	"net_increase_in_cash_and_cash_equivalents"  #现金及现金等价物净增加额
+    "asset_impairment_loss",  #资产减值准备
+    "fixed_assets_depreciation",  #固定资产折旧、油气资产消耗、生产性生物资产折旧
+    "intangible_assets_amortize",  #无形资产费用摊销
+    "long_term_prepaid_expenses_amortization",  #长期待摊费用摊销
+    "the_disposal_of_fixed_assets",  #处置固定资产、无形资产、和其他长期资产收回的损失
+    "fixed_assets_scrap_loss"  #固定资产报废损失
+    "losses_on_the_changes_in_the_fair_value",  #公允价值变动损失
+    "finance_charges",  #财务费用
+    "investment_losses",  #投资损失
+    "deferred_tax_assets",  #递延所得税资产减少
+    "deferred_income_tax_liabilities",  #递延所得税负债增加
+    "the_decrease_of_inventory",  #存货的减少
+    "a_drop_in_business_receivables",  #经营性应收项目的减少
+    "business_to_cope_with_the_increase_of_the_project",  #经营性应付项目的增加
+    "other",  #其他
+    "business_activities_generated_cash_flow_net_2",  #经营活动产生的现金流量净额
+    "a_debt_into_capital",  #负债转为资本
+    "convertible_bonds_matured_within_a_year",  #一年内到期的可转换公司债券
+    "for_fixed_assets",  #融资租入固定资产
+    "the_ending_balance_of_cash",  #现金的期末余额
+    "the_beginning_balance_of_cash",  #现金的期初余额
+    "cash_equivalents_of_the_final_balance",  #现金等价物的期末余额
+    "the_beginning_balance_of_cash_equivalents",  #现金等价物的期初余额
+    "other_reasons_the_impact_on_the_cash_2",  #其他原因对现金的影响
+    "net_increase_in_cash_and_cash_equivalents"  #现金及现金等价物净增加额
+]
+
+cash_sheet_content_zh = [
+    "销售商品、提供劳务收到的现金",
+    "收到的税费返还",
+    "收到其他与经营活动有关的现金",
+    "经营活动现金流入小计",
+    "购买商品、接受劳务支付的现金",
+    "支付给职工以及为职工支付的现金",
+    "支付的各项税费",
+    "支付其他与经营活动有关的现金",
+    "经营活动现金流出小计",
+    "经营活动产生的现金流量净额",
+    "收回投资收到的现金",
+    "取得投资收益收到的现金",
+    "处置固定资产、无形资产、和其他长期资产收回的现金净额",
+    "处置子公司及其他营业单位收到的现金净额",
+    "收到其他与投资活动有关的现金",
+    "投资活动现金流入小计",
+    "构建固定资产、无形资产和其他长期资产支付的现金",
+    "投资祝福的现金",
+    "取得子公司及其他营业单位支付的现金净额",
+    "支付其他与投资活动有关的现金",
+    "投资活动现金流出小计",
+    "投资活动产生的现金流量净额",
+    "吸收投资收到的现金",
+    "取得借款收到的现金",
+    "收到其他与筹资活动有关的现金",
+    "筹资活动现金流入小计",
+    "偿还债务支付的现金",
+    "分配股利、利润或偿付利息支付的现金",
+    "支付其他与筹资活动有关的现金",
+    "筹资活动现金流出小计",
+    "筹资活动产生的现金流量净额",
+    "期初现金及现金等价物余额",
+    "期末现金及现金等价物余额",
+    "净利润",
+    "资产减值准备",
+    "固定资产折旧、油气资产消耗、生产性生物资产折旧",
+    "无形资产费用摊销",
+    "长期待摊费用摊销",
+    "处置固定资产、无形资产、和其他长期资产收回的损失",
+    "固定资产报废损失",
+    "公允价值变动损失",
+    "财务费用",
+    "投资损失",
+    "递延所得税资产减少",
+    "递延所得税负债增加",
+    "存货的减少",
+    "经营性应收项目的减少",
+    "经营性应付项目的增加",
+    "其他",
+    "经营活动产生的现金流量净额",
+    "负债转为资本",
+    "一年内到期的可转换公司债券",
+    "融资租入固定资产",
+    "现金的期末余额",
+    "现金的期初余额",
+    "现金等价物的期末余额",
+    "现金等价物的期初余额",
+    "其他原因对现金的影响",
+    "现金及现金等价物净增加额",
 ]
 
 season2date = {

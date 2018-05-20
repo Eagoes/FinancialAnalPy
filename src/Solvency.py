@@ -85,6 +85,9 @@ class SolvData:
 
     def get_avg_data(self, avg_data):
         self.avg_data = copy(avg_data)
+        for i in range(len(avg_data)):
+            if avg_data[i] < 0:
+                avg_data[i] = 0.01
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
             self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
