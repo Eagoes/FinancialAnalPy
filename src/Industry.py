@@ -124,8 +124,8 @@ class Industry(Company):
             solv_score = company.solv_data.score
             comp_score = company.score
             score_list = [
-                company.name, cre_score, dev_score, oper_score,
-                pro_score, solv_score, comp_score
+                company.name, comp_score, dev_score, cre_score,
+                pro_score, oper_score, solv_score
             ]
             sheet.write_row(row, 0, score_list)
             row += 1
