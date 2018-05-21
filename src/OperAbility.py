@@ -61,18 +61,18 @@ class OperAbility:
         )
         # 资产周转天数
         self.data["asset_turnover_days"] = safe_div(
-            dividend=curr_psheet["operating_income"],
-            divisor=180 * (curr_bsheet["total_assets"] + prev_bsheet["total_assets"])
+            dividend=180 * (curr_bsheet["total_assets"] + prev_bsheet["total_assets"]),
+            divisor=curr_psheet["operating_income"]
         )
         # 应收账款周转天数
         self.data["accounts_receivable_turnover_days"] = safe_div(
-            dividend=curr_psheet["operating_income"],
-            divisor=180 * (curr_bsheet["accounts_receivable"] + prev_bsheet["accounts_receivable"])
+            dividend=180 * (curr_bsheet["accounts_receivable"] + prev_bsheet["accounts_receivable"]),
+            divisor=curr_psheet["operating_income"]
         )
         # 存货周转天数
         self.data["inventory_turnover_days"] = safe_div(
-            dividend=curr_psheet["operating_cost"],
-            divisor=180 * (curr_bsheet["stock"] + prev_bsheet["stock"])
+            dividend=180 * (curr_bsheet["stock"] + prev_bsheet["stock"]),
+            divisor=curr_psheet["operating_cost"],
         )
         # 营业周期
         self.data["business_cycle"] = (
