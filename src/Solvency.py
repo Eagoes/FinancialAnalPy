@@ -23,8 +23,8 @@ class Solvency:
         self.data = {}
         # 资产负债率
         self.data["assets_and_liabilities"] = safe_div(
-            divisor=curr_bsheet["total_assets"],
-            dividend=curr_bsheet["total_liabilities"]
+            dividend=curr_bsheet["total_assets"],
+            divisor=curr_bsheet["total_liabilities"]
         )
         # 流动比率
         self.data["current_ratio"] = safe_div(
@@ -90,7 +90,10 @@ class SolvData:
                 avg_data[i] = 0.01
         last_year_data = self.year2data[max(self.year_list)].data_list
         for i in range(len(last_year_data)):
-            self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
+            if i == 0:
+                self.ratio[i] = get_ratio(last_data=avg_data[i], avg_data=last_year_data[i])
+            else:
+                self.ratio[i] = get_ratio(last_data=last_year_data[i], avg_data=avg_data[i])
             self.score += self.ratio[i] * self.weight[i]
 
     def write_data(self, sheet: Worksheet, merge_format):
@@ -101,14 +104,14 @@ class SolvData:
         col = 1
         for year in self.year_list:
             year_data = self.year2data[year]
-            sheet.write_column(27, col, year_data.data_list)
+            sheet.write_column(28, col, year_data.data_list)
             col += 1
         avg_col = 1 + len(self.year_list)  # “行业平均”数据所在列
         ratio_col = 1 + avg_col  # “比率”数据所在列
         sub_score_col = 1 + ratio_col  # “分项能力”得分所在列
-        sheet.write_column(27, avg_col, self.avg_data)
-        sheet.write_column(27, ratio_col, self.ratio)
-        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(27, sub_score_col), xl_rowcol_to_cell(29, sub_score_col)),
+        sheet.write_column(28, avg_col, self.avg_data)
+        sheet.write_column(28, ratio_col, self.ratio)
+        sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(28, sub_score_col), xl_rowcol_to_cell(30, sub_score_col)),
                           self.score, merge_format)
 
     def write_xlsx(self, sheet: Worksheet, father):

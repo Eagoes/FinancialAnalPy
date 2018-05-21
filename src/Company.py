@@ -125,14 +125,14 @@ class Company:
         indicator_sheet.write_column(6, 0, CreateAbility.data_name_list)
         indicator_sheet.write_column(12, 0, ProfitAbility.data_name_list)
         indicator_sheet.write_column(19, 0, OperAbility.data_name_list)
-        indicator_sheet.write_column(27, 0, Solvency.data_name_list)
+        indicator_sheet.write_column(28, 0, Solvency.data_name_list)
         # write the indicator data
         self.dev_data.write_data(indicator_sheet, merge_format)
         self.cre_data.write_data(indicator_sheet, merge_format)
         self.pro_data.write_data(indicator_sheet, merge_format)
         self.oper_data.write_data(indicator_sheet, merge_format)
         self.solv_data.write_data(indicator_sheet, merge_format)
-        indicator_sheet.merge_range("%s:%s"%(xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(29, score_col)),
+        indicator_sheet.merge_range("%s:%s"%(xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(30, score_col)),
                                     self.score, merge_format)
 
         dev_chart_sheet = workbook.add_worksheet('发展能力')
