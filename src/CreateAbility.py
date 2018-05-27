@@ -6,13 +6,21 @@ from .ImgDrawer import img_draw, bar_and_plot
 
 
 class CreateAbility:
-    data_name_list = [
+    data_name_list_zh = [
         "经营现金增长率",
         "现金流量增长率",
-        "自由现金比",
+        "自由现金流",
         "销售经营现金比",
         "销售现金比",
         "销售自由现金比"
+    ]
+    data_name_list = [
+        "operating_cash_growth_rate",
+        "cash_flow_growth_rate",
+        "free_cash_ratio",
+        "sales_and_operating_cash_ratio",
+        "sales_cash_ratio",
+        "sales_free_cash_ratio"
     ]
 
     def __init__(self, year, prev_year_list, curr_year_list):

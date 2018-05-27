@@ -6,10 +6,15 @@ from .ImgDrawer import img_draw, bar_and_plot
 
 
 class Solvency:
-    data_name_list = [
+    data_name_list_zh = [
         "资产负债率",
         "流动比率",
         "速动比率"
+    ]
+    data_name_list = [
+        "assets_and_liabilities",
+        "current_ratio",
+        "quick_ratio"
     ]
 
     def __init__(self, year, prev_year_list, curr_year_list):
@@ -23,8 +28,8 @@ class Solvency:
         self.data = {}
         # 资产负债率
         self.data["assets_and_liabilities"] = safe_div(
-            dividend=curr_bsheet["total_assets"],
-            divisor=curr_bsheet["total_liabilities"]
+            dividend=curr_bsheet["total_liabilities"],
+            divisor=curr_bsheet["total_assets"]
         )
         # 流动比率
         self.data["current_ratio"] = safe_div(

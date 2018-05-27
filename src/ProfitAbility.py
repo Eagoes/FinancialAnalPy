@@ -6,7 +6,7 @@ from .ImgDrawer import *
 
 
 class ProfitAbility:
-    data_name_list = [
+    data_name_list_zh = [
         "销售毛利率",
         "销售营业利润率",
         "销售净利率",
@@ -14,6 +14,15 @@ class ProfitAbility:
         "资产报酬率",
         "每股收益",
         "资本运营收益率"
+    ]
+    data_name_list = [
+        "sales_gross_margin",
+        "sales_operating_profit_margin",
+        "sales_margin",
+        "roe",
+        "return_on_assets",
+        "earnings_per_share",
+        "capital_operating_rate_of_return"
     ]
 
     def __init__(self, year, prev_year_list, curr_year_list):

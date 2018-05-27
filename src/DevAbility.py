@@ -6,13 +6,21 @@ from .ImgDrawer import img_draw, bar_and_plot
 
 
 class DevAbility:
-    data_name_list = [
+    data_name_list_zh = [
         "销售增长率",
         "资产增长率",
         "净利润增长率",
         "净资产增长率",
         "固定资产增长率"
     ]
+    data_name_list = [
+        "sales_growth_rate",
+        "asset_growth_rate",
+        "net_profit_growth_rate",
+        "net_asset_growth_rate",
+        "fixed_asset_growth_rate"
+    ]
+
 
     def __init__(self, year, prev_year_list, curr_year_list):
         """

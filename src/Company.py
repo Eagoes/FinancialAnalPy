@@ -83,12 +83,7 @@ class Company:
             + 0.1 * self.solv_data.score
         )
 
-    def write_xlsx(self, filepath=module_path+'/result/'):
-        """
-        output the company information and data to the excel 2007+ (.xlsx) file
-        :param filepath: the dir of the excel file you want to create
-        """
-        workbook = Workbook(filepath + self.name + ".xlsx")
+    def write_company_xlsx(self, workbook: Workbook):
         merge_format = workbook.add_format({
             "align": "center",
             "valign": "center"
@@ -121,18 +116,18 @@ class Company:
         indicator_sheet.write(0, sub_score_col, "分项能力得分")
         indicator_sheet.write(0, score_col, "公司得分")
         # write the indicator name which is on the left bar to the indicator sheet
-        indicator_sheet.write_column(1, 0, DevAbility.data_name_list)
-        indicator_sheet.write_column(6, 0, CreateAbility.data_name_list)
-        indicator_sheet.write_column(12, 0, ProfitAbility.data_name_list)
-        indicator_sheet.write_column(19, 0, OperAbility.data_name_list)
-        indicator_sheet.write_column(28, 0, Solvency.data_name_list)
+        indicator_sheet.write_column(1, 0, DevAbility.data_name_list_zh)
+        indicator_sheet.write_column(6, 0, CreateAbility.data_name_list_zh)
+        indicator_sheet.write_column(12, 0, ProfitAbility.data_name_list_zh)
+        indicator_sheet.write_column(19, 0, OperAbility.data_name_list_zh)
+        indicator_sheet.write_column(28, 0, Solvency.data_name_list_zh)
         # write the indicator data
         self.dev_data.write_data(indicator_sheet, merge_format)
         self.cre_data.write_data(indicator_sheet, merge_format)
         self.pro_data.write_data(indicator_sheet, merge_format)
         self.oper_data.write_data(indicator_sheet, merge_format)
         self.solv_data.write_data(indicator_sheet, merge_format)
-        indicator_sheet.merge_range("%s:%s"%(xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(30, score_col)),
+        indicator_sheet.merge_range("%s:%s" % (xl_rowcol_to_cell(1, score_col), xl_rowcol_to_cell(30, score_col)),
                                     self.score, merge_format)
 
         dev_chart_sheet = workbook.add_worksheet('发展能力')
@@ -150,4 +145,11 @@ class Company:
         solv_chart_sheet = workbook.add_worksheet('偿债能力')
         self.solv_data.write_xlsx(sheet=solv_chart_sheet, father=self)
 
+    def write_xlsx(self, filepath=module_path+'/result/'):
+        """
+        output the company information and data to the excel 2007+ (.xlsx) file
+        :param filepath: the dir of the excel file you want to create
+        """
+        workbook = Workbook(filepath + self.name + ".xlsx")
+        self.write_company_xlsx(workbook)
         workbook.close()

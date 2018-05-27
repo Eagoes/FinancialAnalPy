@@ -1,7 +1,13 @@
 from .Company import Company
 from copy import deepcopy, copy
 from xlsxwriter.workbook import Workbook
+from .ImgDrawer import img_draw
 from .globalVar import module_path
+from .DevAbility import DevAbility
+from .CreateAbility import CreateAbility
+from .OperAbility import OperAbility
+from .ProfitAbility import ProfitAbility
+from .Solvency import Solvency
 
 
 class Industry(Company):
@@ -111,9 +117,149 @@ class Industry(Company):
             company.solv_data.get_avg_data(avg_data=avg_solv_data)
             company.get_score()
 
-    def write_score_xlsx(self, filepath=module_path+'/result/'):
-        workbook = Workbook(filepath + "score.xlsx")
-        sheet = workbook.add_worksheet()
+    def write_industry_xlsx(self, workbook: Workbook):
+        super().write_company_xlsx(workbook)
+        graph = [None] * 35
+        sheet = workbook.add_worksheet("公司指标汇总")
+        index = 0
+        year_list = list(self.year_set)
+        year_list.sort()
+        company_name_list = [company.name for company in self.company_list]
+        lastyear = year_list[len(year_list) - 1]  # get the last year
+        for i in range(len(DevAbility.data_name_list)):
+            indicator = DevAbility.data_name_list[i]
+            indicator_zh = DevAbility.data_name_list_zh[i]
+            graph[index] = img_draw(
+                category=company_name_list,
+                plot_params=[
+                    [
+                        [company.dev_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                        indicator_zh,
+                        2
+                    ]
+                ]
+            )
+            sheet.insert_image(20 * index, 0, "", {"image_data": graph[index]})
+            index += 1
+        for i in range(len(CreateAbility.data_name_list)):
+            indicator = CreateAbility.data_name_list[i]
+            indicator_zh = CreateAbility.data_name_list_zh[i]
+            if i == 2:
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.cre_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ],
+                    use_percent=False
+                )
+            else:
+                graph[index] = img_draw(
+                category=company_name_list,
+                plot_params=[
+                    [
+                        [company.cre_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                        indicator_zh,
+                        2
+                    ]
+                ]
+            )
+            sheet.insert_image(20 * index, 0, "", {"image_data": graph[index]})
+            index += 1
+        for i in range(len(ProfitAbility.data_name_list)):
+            indicator = ProfitAbility.data_name_list[i]
+            indicator_zh = ProfitAbility.data_name_list_zh[i]
+            if i == 5:
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.pro_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ],
+                    use_percent=False
+                )
+            else:
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.pro_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ]
+                )
+            sheet.insert_image(20 * index, 0, "", {"image_data": graph[index]})
+            index += 1
+        for i in range(len(OperAbility.data_name_list)):
+            indicator = OperAbility.data_name_list[i]
+            indicator_zh = OperAbility.data_name_list_zh[i]
+            if i in range(5, 9):
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.oper_data.get_indicator(lastyear).data[indicator] for company in
+                             self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ],
+                     use_percent=False
+                )
+            else:
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.oper_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ]
+                )
+            sheet.insert_image(20 * index, 0, "", {"image_data": graph[index]})
+            index += 1
+        for i in range(len(Solvency.data_name_list)):
+            indicator = Solvency.data_name_list[i]
+            indicator_zh = Solvency.data_name_list_zh[i]
+            if i in range(1, 3):
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.solv_data.get_indicator(lastyear).data[indicator] for company in
+                             self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ],
+                    use_percent=False
+                )
+            else:
+                graph[index] = img_draw(
+                    category=company_name_list,
+                    plot_params=[
+                        [
+                            [company.solv_data.get_indicator(lastyear).data[indicator] for company in self.company_list],
+                            indicator_zh,
+                            2
+                        ]
+                    ]
+                )
+            sheet.insert_image(20 * index, 0, "", {"image_data": graph[index]})
+            index += 1
+        self.write_score_xlsx(workbook)
+
+
+    def write_score_xlsx(self, workbook: Workbook):
+        sheet = workbook.add_worksheet("公司指标能力汇总")
         sheet.write_row(0, 0, ["公司名称", "综合", "发展能力", "创现能力", "盈利能力", "运营能力", "偿债能力"])
         row = 1
         for company in self.company_list:
@@ -129,4 +275,12 @@ class Industry(Company):
             ]
             sheet.write_row(row, 0, score_list)
             row += 1
+
+    def write_xlsx(self, filepath=module_path+'/result/'):
+        """
+        output the company information and data to the excel 2007+ (.xlsx) file
+        :param filepath: the dir of the excel file you want to create
+        """
+        workbook = Workbook(filepath + self.name + ".xlsx")
+        self.write_industry_xlsx(workbook)
         workbook.close()

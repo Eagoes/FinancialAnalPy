@@ -6,7 +6,7 @@ from .ImgDrawer import img_draw, bar_and_plot
 
 
 class OperAbility:
-    data_name_list = [
+    data_name_list_zh = [
         "销售费用率",
         "销售回款率",
         "管理费用率",
@@ -16,6 +16,17 @@ class OperAbility:
         "应收账款周转天数",
         "存货周转天数",
         "营业周期"
+    ]
+    data_name_list = [
+        "sales_expense_rate",
+        "repayment_rate_of_sales",
+        "management_fee_rate",
+        "sales_management_fee_rate",
+        "period_expense_rate",
+        "asset_turnover_days",
+        "accounts_receivable_turnover_days",
+        "inventory_turnover_days",
+        "business_cycle"
     ]
 
     def __init__(self, year, prev_year_list, curr_year_list):
@@ -105,7 +116,7 @@ class OperData:
         :param year_set: catch the year set from Company instance and calculate the operation ability
         :param annual_data: the dictionary whose key is year and value is data list received from Company instance
         """
-        self.weight = [0, 0, 0, 10, 20, 30, 20, 20, 0]
+        self.weight = [5, 30, 5, 0, 10, 30, 10, 10, 0]
         self.year_list = list(year_set)
         self.year_list.sort()
         self.year2data = {}  # a dictionary whose key is year and value is OperAbility
@@ -277,3 +288,15 @@ class OperData:
             use_percent=False
         )
         sheet.insert_image(140, 0, "", {"image_data": graph8})
+
+        graph9 = img_draw(
+            category=self.year_list,
+            plot_params=[
+                [
+                    [self.get_indicator(year).data["repayment_rate_of_sales"] for year in self.year_list],
+                    "销售回款率",
+                    1
+                ]
+            ]
+        )
+        sheet.insert_image(160, 0, "", {"image_data": graph9})

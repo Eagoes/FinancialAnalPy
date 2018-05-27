@@ -41,4 +41,3 @@ class DataContainer:
         for company in self.company_list:
             company.write_xlsx()
         self.industry.write_xlsx()
-        self.industry.write_score_xlsx()
